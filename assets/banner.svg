@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Bruma Cafe</title>
+  <desc id="desc">Banner editorial de Bruma Cafe, cafe de especialidad colombiano</desc>
+  <rect width="1200" height="360" fill="#253b2b"/>
+  <circle cx="1040" cy="62" r="150" fill="#304b38"/>
+  <circle cx="1110" cy="270" r="210" fill="#1f3024"/>
+  <path fill="#f1eadb" d="M810 292 932 85l122 207H810Z"/>
+  <path fill="#b84722" d="m932 85 43 68.5-43 39.5-43-39.5L932 85Z"/>
+  <path fill="none" stroke="#f1eadb" stroke-linecap="round" stroke-width="11" d="M790 315c43-18 87-18 130 0s87 18 130 0M820 343c37-15 75-15 112 0s75 15 112 0"/>
+  <path fill="none" stroke="#e16a3e" stroke-linecap="round" stroke-width="3" d="M74 84h150M74 96h92"/>
+  <text x="74" y="164" fill="#f1eadb" font-family="Georgia, serif" font-size="68" font-weight="bold">Bruma Cafe</text>
+  <text x="78" y="210" fill="#f1b08e" font-family="Arial, sans-serif" font-size="18" font-weight="bold" letter-spacing="5">CAFE DE ESPECIALIDAD · COLOMBIA</text>
+  <text x="78" y="270" fill="#d7d5c8" font-family="Arial, sans-serif" font-size="20">Un ritual honesto para cada mañana.</text>
+</svg>
