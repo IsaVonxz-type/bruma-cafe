@@ -30,7 +30,7 @@
       <nav>
         <a href="#contacto">Mi cuenta</a>
         <a href="#catalogo">Carrito <span class="cart-count">2</span></a>
-        <a href="#contacto">Ayuda</a>
+        <a href="#faq">Ayuda</a>
       </nav>
     </header>
 
@@ -85,7 +85,7 @@
               <span class="product-number">01</span>
               <h3>Sierra Dulce</h3>
               <p>Chocolate, panela y ciruela. Tueste medio.</p>
-                <strong>$42.000</strong>
+              <strong>$42.000</strong>
             </article>
             <article class="featured-product">
               <img
@@ -99,7 +99,7 @@
               <span class="product-number">02</span>
               <h3>Niebla Rosa</h3>
               <p>Frutos rojos, jazmín y miel. Tueste claro.</p>
-                <strong>$48.000</strong>
+              <strong>$48.000</strong>
             </article>
             <article>
               <img
@@ -113,7 +113,7 @@
               <span class="product-number">03</span>
               <h3>Monte Negro</h3>
               <p>Cacao, nuez y caramelo. Tueste oscuro.</p>
-                <strong>$45.000</strong>
+              <strong>$45.000</strong>
             </article>
           </div>
         </section>
@@ -242,7 +242,7 @@
             <p class="eyebrow">Tu próximo pedido</p>
             <h2>Contacto y registro</h2>
           </div>
-          <form>
+          <form id="contact-form">
             <fieldset>
               <legend>Datos personales</legend>
               <div class="form-grid">
@@ -286,7 +286,14 @@
               </div>
             </fieldset>
             <button type="submit">Registrar pedido</button>
+            <p
+              id="form-status"
+              class="form-status"
+              role="status"
+              aria-live="polite"
+            ></p>
           </form>
+          <div id="saved-orders" class="saved-orders" aria-live="polite"></div>
           <div class="faq" id="faq">
             <p class="eyebrow">Resolvemos tus dudas</p>
             <h3>Preguntas frecuentes</h3>
@@ -332,4 +339,6 @@
       <small>&copy; 2026 Bruma Café. Todos los derechos reservados.</small>
     </footer>
   </body>
+
+  <script type="module" src="./js/controller.js"></script>
 </html>

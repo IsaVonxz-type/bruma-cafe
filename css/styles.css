@@ -161,7 +161,9 @@ h2 {
   grid-template-columns: 1.4fr 0.6fr;
   gap: 6vw;
   align-items: center;
-  background: radial-gradient(circle at 88% 28%, #dfc6a2 0 13%, transparent 13.3%), var(--cream);
+  background:
+    radial-gradient(circle at 88% 28%, #dfc6a2 0 13%, transparent 13.3%),
+    var(--cream);
 }
 
 .hero-copy {
@@ -180,7 +182,9 @@ button {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  transition: background 180ms ease, transform 180ms ease;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
 }
 
 .button:hover,
@@ -191,6 +195,91 @@ button:hover {
 .button:active,
 button:active {
   transform: translateY(2px);
+}
+
+.form-status {
+  min-height: 1.6em;
+  margin: 18px 0 0;
+  color: var(--forest);
+  font-weight: 700;
+}
+
+.form-status[data-type="error"] {
+  color: var(--orange);
+}
+
+.saved-orders {
+  max-width: 850px;
+  margin-top: 48px;
+}
+
+.saved-orders > h3 {
+  font-size: 2rem;
+}
+
+.saved-order {
+  position: relative;
+  margin-top: 12px;
+  padding: 20px 130px 20px 20px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.saved-order--new {
+  animation: order-enter 320ms ease both;
+}
+
+.saved-order--removing {
+  animation: order-leave 260ms ease both;
+  pointer-events: none;
+}
+
+@keyframes order-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes order-leave {
+  to {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
+.saved-order h3,
+.saved-order p {
+  margin: 0;
+}
+
+.saved-order h3 {
+  font-size: 1.35rem;
+}
+
+.saved-order p {
+  color: #69675f;
+  font-size: 0.85rem;
+}
+
+.remove-order {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  color: var(--orange);
+  border: 1px solid var(--orange);
+  background: transparent;
+  font-size: 0.8rem;
+}
+
+.remove-order:hover {
+  color: white;
+  background: var(--orange);
 }
 
 .hero-art {
@@ -369,7 +458,9 @@ tfoot {
 
 .ranking strong {
   color: var(--orange-light);
-  font: 500 0.8rem "DM Sans", sans-serif;
+  font:
+    500 0.8rem "DM Sans",
+    sans-serif;
 }
 
 .categories {
