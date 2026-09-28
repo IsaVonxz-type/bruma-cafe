@@ -21,7 +21,7 @@
   color-scheme: light;
 }
 
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   --cream: #252a26;
   --paper: #171c19;
   --ink: #f2eee4;
@@ -36,8 +36,9 @@
   --muted: #b8c0b7;
   --soft-cream: #d0d6cd;
   --topbar-background: rgba(23, 28, 25, 0.94);
-  --footer-background: #101512;
-  --footer-muted: #aeb8af;
+  --footer-background: #0d1714;
+  --footer-muted: #d5ddd8;
+  --footer-text: #f3efe7;
   --ranking-line: #58675b;
   --ranking-number: #f5b896;
   --hero-glow: #70563d;
@@ -56,9 +57,11 @@ body {
   margin: 0;
   color: var(--ink);
   background: var(--paper);
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   line-height: 1.6;
-  transition: color 260ms ease, background-color 260ms ease;
+  transition:
+    color 260ms ease,
+    background-color 260ms ease;
 }
 
 a {
@@ -93,7 +96,7 @@ textarea:focus-visible {
   display: flex;
   gap: 12px;
   align-items: center;
-  font-family: "Fraunces", serif;
+  font-family: 'Fraunces', serif;
   font-size: 1.25rem;
   font-weight: 800;
 }
@@ -166,12 +169,12 @@ footer a:hover {
   transform: rotate(-90deg) scale(0.45);
 }
 
-:root[data-theme="dark"] .theme-icon--sun {
+:root[data-theme='dark'] .theme-icon--sun {
   opacity: 0;
   transform: rotate(90deg) scale(0.45);
 }
 
-:root[data-theme="dark"] .theme-icon--moon {
+:root[data-theme='dark'] .theme-icon--moon {
   opacity: 1;
   transform: rotate(0) scale(1);
 }
@@ -235,7 +238,7 @@ h1,
 h2,
 h3 {
   margin-top: 0;
-  font-family: "Fraunces", serif;
+  font-family: 'Fraunces', serif;
   line-height: 1.05;
 }
 
@@ -258,7 +261,11 @@ h2 {
   gap: 6vw;
   align-items: center;
   background:
-    radial-gradient(circle at 88% 28%, var(--hero-glow) 0 13%, transparent 13.3%),
+    radial-gradient(
+      circle at 88% 28%,
+      var(--hero-glow) 0 13%,
+      transparent 13.3%
+    ),
     var(--cream);
 }
 
@@ -301,7 +308,7 @@ button:active {
   font-weight: 700;
 }
 
-.form-status[data-type="error"] {
+.form-status[data-type='error'] {
   color: var(--accent-text);
 }
 
@@ -386,16 +393,33 @@ button:active {
   padding: 32px;
   flex-direction: column;
   justify-content: flex-end;
-  color: var(--paper);
+  color: #f5efe7;
   border-radius: 48% 48% 8px 8px;
-  background: var(--forest);
+  background: linear-gradient(180deg, #1d332e 0%, #132821 100%);
   box-shadow: 18px 18px 0 var(--orange);
 }
 
+.hero-art span,
+.hero-art small {
+  color: rgba(245, 239, 231, 0.8);
+}
+
+.hero-art span {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .hero-art strong {
-  font-family: "Fraunces", serif;
+  color: #fffaf4;
+  font-family: 'Fraunces', serif;
   font-size: 3.7rem;
   line-height: 1;
+}
+
+.hero-art small {
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
 .section-heading {
@@ -494,7 +518,7 @@ table {
 
 caption {
   padding-bottom: 16px;
-  font-family: "Fraunces", serif;
+  font-family: 'Fraunces', serif;
   font-size: 1.6rem;
   text-align: left;
 }
@@ -517,13 +541,24 @@ tfoot {
 }
 
 .dark-section {
-  color: var(--paper);
-  background: var(--forest);
+  color: #f4efe7;
+  background: #1d332e;
 }
 
 .dark-section .eyebrow,
 .featured-product > strong {
-  color: var(--orange-light);
+  color: #f5b896;
+}
+
+.dark-section h2,
+.dark-section p,
+.dark-section li,
+.dark-section span,
+.dark-section strong,
+.ranking li,
+.ranking span,
+.ranking strong {
+  color: inherit;
 }
 
 .ranking {
@@ -539,24 +574,26 @@ tfoot {
   gap: 20px;
   justify-content: space-between;
   padding: 16px 0;
-  border-bottom: 1px solid var(--ranking-line);
-  font-family: "Fraunces", serif;
+  border-bottom: 1px solid rgba(225, 232, 227, 0.38);
+  color: #f3efe5;
+  font-family: 'Fraunces', serif;
   font-size: 1.35rem;
 }
 
 .ranking li::before {
-  content: "0" counter(ranking);
-  color: var(--ranking-number);
+  content: '0' counter(ranking);
+  color: #f0bd9a;
 }
 
 .ranking span {
   margin-right: auto;
+  color: #f3efe5;
 }
 
 .ranking strong {
-  color: var(--orange-light);
+  color: #f0bd9a;
   font:
-    500 0.8rem "DM Sans",
+    500 0.8rem 'DM Sans',
     sans-serif;
 }
 
@@ -572,12 +609,12 @@ tfoot {
 .categories li {
   padding: 22px;
   border-bottom: 2px solid var(--ink);
-  font-family: "Fraunces", serif;
+  font-family: 'Fraunces', serif;
   font-size: 1.3rem;
 }
 
 .categories li::before {
-  content: "✦";
+  content: '✦';
   margin-right: 12px;
   color: var(--accent-text);
 }
@@ -662,7 +699,7 @@ fieldset {
 
 legend {
   padding: 0 10px;
-  font-family: "Fraunces", serif;
+  font-family: 'Fraunces', serif;
   font-size: 1.2rem;
   font-weight: 800;
 }
@@ -706,7 +743,7 @@ textarea:focus {
 footer {
   display: grid;
   padding: 55px 4vw;
-  color: var(--paper);
+  color: var(--footer-text, #f3efe7);
   background: var(--footer-background);
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
@@ -714,6 +751,7 @@ footer {
 }
 
 footer address {
+  color: var(--footer-text, #f3efe7);
   font-style: normal;
   text-align: right;
 }
@@ -723,33 +761,41 @@ footer small {
   text-align: right;
 }
 
-:root[data-theme="dark"] .product-grid article,
-:root[data-theme="dark"] .score-card,
-:root[data-theme="dark"] .saved-order {
+footer a {
+  color: var(--footer-text, #f3efe7);
+}
+
+footer a:hover {
+  color: var(--orange-light);
+}
+
+:root[data-theme='dark'] .product-grid article,
+:root[data-theme='dark'] .score-card,
+:root[data-theme='dark'] .saved-order {
   border-color: #465449;
   box-shadow: 0 12px 28px rgb(0 0 0 / 14%);
 }
 
-:root[data-theme="dark"] .product-grid .featured-product {
+:root[data-theme='dark'] .product-grid .featured-product {
   background: #2c4638;
 }
 
-:root[data-theme="dark"] .dark-section {
+:root[data-theme='dark'] .dark-section {
   background: #22372c;
 }
 
-:root[data-theme="dark"] th {
+:root[data-theme='dark'] th {
   background: #304a3a;
 }
 
-:root[data-theme="dark"] input,
-:root[data-theme="dark"] select,
-:root[data-theme="dark"] textarea {
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea {
   border-color: #59665a;
   background: #202722;
 }
 
-:root[data-theme="dark"] ::selection {
+:root[data-theme='dark'] ::selection {
   color: #171c19;
   background: #f5b896;
 }
