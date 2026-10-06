@@ -27,29 +27,57 @@
         />
         <span>Bruma Café</span>
       </a>
-      <nav>
-        <button class="theme-toggle" type="button" aria-label="Activar modo oscuro" aria-pressed="false">
-          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+      <nav aria-label="Navegación principal">
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Activar modo oscuro"
+          aria-pressed="false"
+        >
+          <svg
+            class="theme-icon theme-icon--sun"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            <path
+              d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"
+            />
           </svg>
-          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+          <svg
+            class="theme-icon theme-icon--moon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" />
           </svg>
         </button>
-        <a href="#contacto">Mi cuenta</a>
-        <a href="#catalogo">Carrito <span class="cart-count">2</span></a>
+        <a href="#catalogo">Inventario</a>
+        <a href="#contacto">Contacto</a>
         <a href="#faq">Ayuda</a>
       </nav>
     </header>
 
     <div class="page-layout">
-      <aside>
+      <aside aria-label="Filtros y resumen del inventario">
+        <p>Filtrar por categoría</p>
+        <nav id="category-filters" aria-label="Categorías"></nav>
+        <div class="sidebar-summary" aria-labelledby="summary-title">
+          <p id="summary-title">Resumen del inventario</p>
+          <dl>
+            <dt>Registros</dt>
+            <dd id="summary-total">0</dd>
+            <dt>Agotados</dt>
+            <dd id="summary-empty">0</dd>
+            <dt>Unidades</dt>
+            <dd id="summary-quantity">0</dd>
+          </dl>
+        </div>
         <p>Explorar</p>
-        <nav>
+        <nav aria-label="Secciones de la página">
           <a href="#home">01 Inicio</a>
           <a href="#catalogo">02 Catálogo</a>
-          <a href="#especificaciones">03 Especificaciones</a>
+          <a href="#especificaciones">03 Tabla resumen</a>
           <a href="#promociones">04 Promociones</a>
           <a href="#categorias">05 Categorías</a>
           <a href="#indicadores">06 Indicadores</a>
@@ -79,52 +107,82 @@
         <section id="catalogo">
           <div class="section-heading">
             <p class="eyebrow">Selección del tostador</p>
-            <h2>Catálogo</h2>
+            <h2>Inventario de café</h2>
           </div>
-          <div class="product-grid">
-            <article>
-              <img
-                class="product-image"
-                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&fm=webp&w=720&q=75"
-                width="720"
-                height="480"
-                alt="Taza de café Sierra Dulce"
-              />
-              <span class="product-tag">Clásico</span>
-              <span class="product-number">01</span>
-              <h3>Sierra Dulce</h3>
-              <p>Chocolate, panela y ciruela. Tueste medio.</p>
-              <strong>$42.000</strong>
-            </article>
-            <article class="featured-product">
-              <img
-                class="product-image"
-                src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&fm=webp&w=720&q=75"
-                width="720"
-                height="480"
-                alt="Granos de café Niebla Rosa"
-              />
-              <span class="product-tag">Más vendido</span>
-              <span class="product-number">02</span>
-              <h3>Niebla Rosa</h3>
-              <p>Frutos rojos, jazmín y miel. Tueste claro.</p>
-              <strong>$48.000</strong>
-            </article>
-            <article>
-              <img
-                class="product-image"
-                src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&fm=webp&w=720&q=75"
-                width="720"
-                height="480"
-                alt="Café preparado Monte Negro"
-              />
-              <span class="product-tag">Tueste intenso</span>
-              <span class="product-number">03</span>
-              <h3>Monte Negro</h3>
-              <p>Cacao, nuez y caramelo. Tueste oscuro.</p>
-              <strong>$45.000</strong>
-            </article>
+          <form id="record-form" class="record-form" novalidate>
+            <h3>Agregar producto</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label for="product-name">Nombre del producto</label
+                ><input
+                  id="product-name"
+                  name="nombre"
+                  required
+                  minlength="3"
+                />
+              </div>
+              <div class="field">
+                <label for="product-price">Precio (COP)</label
+                ><input
+                  id="product-price"
+                  name="precio"
+                  type="number"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="product-category">Categoría</label
+                ><select id="product-category" name="categoria" required>
+                  <option value="">Selecciona categoría</option>
+                  <option>Grano</option>
+                  <option>Molido</option>
+                  <option>Accesorios</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="product-quantity">Cantidad (bolsas)</label
+                ><input
+                  id="product-quantity"
+                  name="cantidad"
+                  type="number"
+                  min="0"
+                  step="1"
+                  required
+                />
+              </div>
+              <div class="field full-width">
+                <label for="product-image">URL de imagen</label
+                ><input
+                  id="product-image"
+                  name="imagen"
+                  type="url"
+                  placeholder="https://..."
+                  required
+                />
+              </div>
+            </div>
+            <button type="submit">Agregar al inventario</button>
+            <p
+              id="record-status"
+              class="form-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </form>
+          <div class="search-row">
+            <label for="product-search">Buscar productos</label
+            ><input
+              id="product-search"
+              type="search"
+              placeholder="Nombre o categoría..."
+            />
+            <p id="result-count" aria-live="polite"></p>
           </div>
+          <p id="empty-results" class="empty-results" hidden>
+            No hay coincidencias para esta búsqueda.
+          </p>
+          <div id="product-list" class="product-grid" aria-live="polite"></div>
         </section>
 
         <section id="especificaciones">
@@ -146,35 +204,20 @@
             <div class="table-wrap">
               <table>
                 <caption>
-                  Planes de garantía
+                  Resumen del inventario
                 </caption>
                 <thead>
                   <tr>
-                    <th>Plan</th>
-                    <th>Cobertura</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
                     <th>Precio</th>
+                    <th>Cantidad</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>Básico</td>
-                    <td>30 días</td>
-                    <td>Gratis</td>
-                  </tr>
-                  <tr>
-                    <td>Pro</td>
-                    <td>6 meses</td>
-                    <td>$15.000</td>
-                  </tr>
-                  <tr>
-                    <td>Premium</td>
-                    <td>12 meses</td>
-                    <td>$28.000</td>
-                  </tr>
-                </tbody>
+                <tbody id="summary-table"></tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                       <em>Todos los precios incluyen IVA.</em>
                     </td>
                   </tr>
@@ -186,30 +229,27 @@
 
         <section id="promociones" class="dark-section">
           <div class="section-heading">
-            <p class="eyebrow">Favoritos de la comunidad</p>
-            <h2>Top 5 más vendidos</h2>
+            <p class="eyebrow">Nuestra selección</p>
+            <h2>Productos destacados</h2>
           </div>
           <ol class="ranking">
-            <li><span>Niebla Rosa</span><strong>340 g</strong></li>
-            <li><span>Sierra Dulce</span><strong>340 g</strong></li>
-            <li><span>Prensa Bruma</span><strong>600 ml</strong></li>
-            <li><span>Monte Negro</span><strong>340 g</strong></li>
-            <li><span>Kit V60</span><strong>4 piezas</strong></li>
+            <li><span>Sierra Dulce</span><strong>Grano</strong></li>
+            <li><span>Niebla Rosa</span><strong>Grano</strong></li>
+            <li><span>Monte Negro</span><strong>Molido</strong></li>
+            <li><span>Caturra Honey</span><strong>Grano</strong></li>
+            <li><span>Prensa Bruma</span><strong>Accesorios</strong></li>
           </ol>
         </section>
 
         <section id="categorias">
           <div class="section-heading">
-            <p class="eyebrow">Encuentra tu ritual</p>
-            <h2>Categorías</h2>
+            <p class="eyebrow">Productos por tipo</p>
+            <h2>Categorías del inventario</h2>
           </div>
           <ul class="categories">
-            <li>Café en grano</li>
-            <li>Café molido</li>
-            <li>Métodos de filtrado</li>
-            <li>Molinos</li>
+            <li>Grano</li>
+            <li>Molido</li>
             <li>Accesorios</li>
-            <li>Kits de regalo</li>
           </ul>
         </section>
 
@@ -257,7 +297,14 @@
               <div class="form-grid">
                 <div class="field">
                   <label for="nombre">Nombre completo</label>
-                  <input id="nombre" type="text" name="nombre" required />
+                  <input
+                    id="nombre"
+                    type="text"
+                    name="nombre"
+                    required
+                    minlength="3"
+                    pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                  />
                 </div>
                 <div class="field">
                   <label for="email">Correo electrónico</label>
@@ -265,36 +312,18 @@
                 </div>
                 <div class="field">
                   <label for="telefono">Teléfono</label>
-                  <input id="telefono" type="tel" name="telefono" required />
+                  <input
+                    id="telefono"
+                    type="tel"
+                    name="telefono"
+                    required
+                    minlength="7"
+                    pattern="[0-9+\(\) \-]{7,}"
+                  />
                 </div>
               </div>
             </fieldset>
-            <fieldset>
-              <legend>Información de compra</legend>
-              <div class="form-grid">
-                <div class="field">
-                  <label for="pago">Método de pago</label>
-                  <select id="pago" name="pago" required>
-                    <option value="">Selecciona una opción</option>
-                    <option>Tarjeta de crédito</option>
-                    <option>Transferencia bancaria</option>
-                    <option>Pago contra entrega</option>
-                  </select>
-                </div>
-                <div class="field full-width">
-                  <label for="instrucciones"
-                    >Instrucciones adicionales de envío</label
-                  >
-                  <textarea
-                    id="instrucciones"
-                    name="instrucciones"
-                    rows="4"
-                    placeholder="Ej: entregar en portería"
-                  ></textarea>
-                </div>
-              </div>
-            </fieldset>
-            <button type="submit">Registrar pedido</button>
+            <button type="submit">Enviar mensaje</button>
             <p
               id="form-status"
               class="form-status"
@@ -302,7 +331,7 @@
               aria-live="polite"
             ></p>
           </form>
-          <div id="saved-orders" class="saved-orders" aria-live="polite"></div>
+          <div id="saved-orders" class="saved-orders"></div>
           <div class="faq" id="faq">
             <p class="eyebrow">Resolvemos tus dudas</p>
             <h3>Preguntas frecuentes</h3>
@@ -347,7 +376,16 @@
       </nav>
       <small>&copy; 2026 Bruma Café. Todos los derechos reservados.</small>
     </footer>
+    <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <form method="dialog">
+        <h3 id="confirm-title"></h3>
+        <p id="confirm-message"></p>
+        <div class="confirm-actions">
+          <button type="submit" value="cancel" class="confirm-cancel">Cancelar</button>
+          <button type="submit" value="accept" id="confirm-accept"></button>
+        </div>
+      </form>
+    </dialog>
+    <script src="js/app.js"></script>
   </body>
-
-  <script type="module" src="./js/controller.js"></script>
 </html>
