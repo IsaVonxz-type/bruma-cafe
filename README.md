@@ -1,5 +1,10 @@
 ![Banner editorial de Bruma Café, café de especialidad colombiano](assets/banner.svg)
 
+# Participantes
+
+- Isaac Manuel Madera Jimenez
+- Brayan Stid Jimenez Arredondo
+
 # Bruma Café
 
 Landing page de una tienda de café de especialidad. Proyecto académico construido con HTML, CSS y JavaScript para presentar una marca, su catálogo y contenido informativo en una sola página, además de registrar pedidos en el navegador.
