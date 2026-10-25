@@ -71,6 +71,8 @@
             <dd id="summary-empty">0</dd>
             <dt>Unidades</dt>
             <dd id="summary-quantity">0</dd>
+            <dt>Valor inventario</dt>
+            <dd id="summary-value">$ 0</dd>
           </dl>
         </div>
         <p>Explorar</p>
@@ -110,7 +112,7 @@
             <h2>Inventario de café</h2>
           </div>
           <form id="record-form" class="record-form" novalidate>
-            <h3>Agregar producto</h3>
+            <h3 id="record-form-title">Agregar producto</h3>
             <div class="form-grid">
               <div class="field">
                 <label for="product-name">Nombre del producto</label
@@ -162,7 +164,17 @@
                 />
               </div>
             </div>
-            <button type="submit">Agregar al inventario</button>
+            <button id="save-product" type="submit">
+              Agregar al inventario
+            </button>
+            <button
+              id="cancel-edit"
+              class="confirm-cancel"
+              type="button"
+              hidden
+            >
+              Cancelar edición
+            </button>
             <p
               id="record-status"
               class="form-status"
@@ -170,6 +182,11 @@
               aria-live="polite"
             ></p>
           </form>
+          <div class="inventory-actions">
+            <button id="restore-products" class="confirm-cancel" type="button">
+              Restaurar productos de ejemplo
+            </button>
+          </div>
           <div class="search-row">
             <label for="product-search">Buscar productos</label
             ><input
@@ -376,16 +393,25 @@
       </nav>
       <small>&copy; 2026 Bruma Café. Todos los derechos reservados.</small>
     </footer>
-    <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <dialog
+      id="confirm-dialog"
+      class="confirm-dialog"
+      aria-labelledby="confirm-title"
+      aria-describedby="confirm-message"
+    >
       <form method="dialog">
         <h3 id="confirm-title"></h3>
         <p id="confirm-message"></p>
         <div class="confirm-actions">
-          <button type="submit" value="cancel" class="confirm-cancel">Cancelar</button>
+          <button type="submit" value="cancel" class="confirm-cancel">
+            Cancelar
+          </button>
           <button type="submit" value="accept" id="confirm-accept"></button>
         </div>
       </form>
     </dialog>
-    <script src="js/app.js"></script>
+    <script src="js/modelo.js"></script>
+    <script src="js/vista.js"></script>
+    <script src="js/controlador.js"></script>
   </body>
 </html>
