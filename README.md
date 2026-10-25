@@ -23,7 +23,9 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 ├── css/
 │   └── styles.css
 ├── js/
-│   └── app.js
+│   ├── modelo.js
+│   ├── vista.js
+│   └── controlador.js
 └── assets/
     ├── logo.svg
     ├── banner.svg
@@ -32,7 +34,9 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 
 - `index.html`: contenido, estructura semántica, navegación, catálogo, formulario y preguntas frecuentes.
 - `css/styles.css`: estilos, distribución con Grid y Flexbox, estados de foco y adaptación responsive.
-- `js/app.js`: datos, validaciones, render de tarjetas, filtros, búsqueda, resumen, pedidos de contacto en `localStorage` y arranque.
+- `js/modelo.js`: productos, reglas de negocio, operaciones CRUD y persistencia de inventario y pedidos.
+- `js/vista.js`: lectura de formularios, tarjetas, filtros, resúmenes y mensajes mediante APIs seguras del DOM.
+- `js/controlador.js`: eventos, coordinación de las capas y arranque de la aplicación.
 - `assets/logo.svg`: logotipo vectorial usado en encabezado, pie de página y favicon.
 - `assets/banner.svg`: banner editorial del proyecto.
 - `assets/*.jpg`: fotos locales de los productos.
@@ -40,12 +44,14 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 ## Contenido y funcionalidades
 
 - Cabecera con un solo `h1`, menú superior y menú lateral por anclas. En móvil la barra lateral pasa arriba del contenido.
-- Inventario de 6 productos pintados desde JavaScript con `createElement` y `appendChild`.
-- Agregar productos con validaciones (campo vacío, número inválido o negativo, nombre repetido, URL de imagen y máximo 50 bolsas de grano). Los errores se muestran en la página.
+- Inventario de productos con CRUD completo: crear, listar, editar y eliminar desde un formulario reutilizable.
+- Persistencia del inventario con `localStorage`; los productos sobreviven a recargar la página.
+- Validaciones de negocio centralizadas en el modelo: nombre mínimo, precio positivo, cantidad entera no negativa, categoría válida, nombre único, imagen HTTP/HTTPS y máximo 50 bolsas de grano.
+- Botón para restaurar los seis productos de ejemplo con confirmación.
 - Buscador en vivo, sin distinguir mayúsculas, con contador y aviso sin coincidencias.
 - Filtros por categoría creados desde JavaScript y combinados con el buscador.
 - Eliminar productos con delegación de eventos. Agregar y eliminar abren un cuadro de confirmación estilizado (`<dialog>`) con el nombre del producto antes de aplicar el cambio.
-- Resumen lateral (registros, agotados, unidades) con `filter` y `reduce`, y tabla de resumen, ambos actualizados en cada cambio.
+- Resumen lateral (registros, agotados, unidades y valor total del inventario) con `filter` y `reduce`, y tabla de resumen, ambos actualizados en cada cambio.
 - Estados visuales con `classList`: `is-empty`, `is-selected`, `has-error`.
 - Formulario de contacto con validación del navegador; al enviar muestra un mensaje con el nombre, limpia el formulario y guarda el pedido en `localStorage`, desde donde puede eliminarse.
 - Tema claro y oscuro con preferencia guardada.
