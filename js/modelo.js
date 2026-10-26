@@ -3,6 +3,7 @@
 const Modelo = (() => {
   const productosKey = "bruma-cafe-productos";
   const pedidosKey = "bruma-cafe-pedidos";
+  const precioMaximo = 1_000_000;
   const ejemplos = [
     {
       id: 1,
@@ -98,6 +99,8 @@ const Modelo = (() => {
         errores.push("El nombre debe tener al menos 3 caracteres.");
       if (!Number.isFinite(datos.precio) || datos.precio <= 0)
         errores.push("El precio debe ser mayor que cero.");
+      else if (datos.precio > precioMaximo)
+        errores.push("El precio no puede superar $1.000.000 COP.");
       if (!Number.isInteger(datos.cantidad) || datos.cantidad < 0)
         errores.push("La cantidad debe ser un entero mayor o igual a cero.");
       if (!new Set(["Grano", "Molido", "Accesorios"]).has(datos.categoria))
