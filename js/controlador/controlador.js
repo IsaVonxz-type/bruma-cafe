@@ -4,7 +4,6 @@ const Controlador = (() => {
   let idEditando = null;
   let categoriaActiva = "Todas";
   let busqueda = "";
-  let temporizadorContacto;
 
   function actualizarVista() {
     if (
@@ -16,6 +15,7 @@ const Controlador = (() => {
       categoriaActiva = "Todas";
     Vista.pintarProductos(Modelo.productos, busqueda, categoriaActiva);
     Vista.pintarResumen(Modelo.productos, Modelo);
+    ControladorTabla.actualizar();
   }
 
   function cancelarEdicion() {
@@ -56,7 +56,6 @@ const Controlador = (() => {
       `${datos.nombre} ${editando ? "actualizado" : "agregado"} en el inventario.`,
     );
     actualizarVista();
-    console.info(`Inventario actualizado: ${datos.nombre}`);
   }
 
   async function eliminarProducto(id) {
@@ -81,19 +80,71 @@ const Controlador = (() => {
     actualizarVista();
   }
 
-  function mostrarMensajeContacto(mensaje, error = false) {
-    const estado = document.querySelector("#form-status");
-    clearTimeout(temporizadorContacto);
-    estado.textContent = mensaje;
-    estado.classList.toggle("has-error", error);
-    if (mensaje)
-      temporizadorContacto = setTimeout(() => {
-        estado.textContent = "";
-      }, 5000);
+  async function ejecutarQuanty(tarea) {
+    const clave = Vista.leerClaveQuanty();
+    if (!clave) {
+      Vista.mostrarEstadoQuanty("Pega primero la clave de Quanty.", "error");
+      return;
+    }
+    Modelo.quanty.guardarClave(clave);
+    Vista.cargandoQuanty(true);
+    Vista.mostrarEstadoQuanty("Conectando con Quanty...", "loading");
+    try {
+      await tarea(clave);
+    } catch (error) {
+      Vista.mostrarEstadoQuanty(error.message, "error");
+    } finally {
+      Vista.cargandoQuanty(false);
+    }
+  }
+
+  function probarClaveQuanty() {
+    return ejecutarQuanty(async (clave) => {
+      const valida = await ApiQuanty.probarClave(clave);
+      Vista.mostrarEstadoQuanty(
+        valida
+          ? "Clave válida. Ya puedes enviar tus datos."
+          : "Quanty no confirmó la clave.",
+        valida ? "ok" : "error",
+      );
+    });
+  }
+
+  function enviarAQuanty(evento) {
+    evento.preventDefault();
+    return ejecutarQuanty(async (clave) => {
+      const envio = Modelo.quanty.construirEnvio();
+      if (!envio.productos && !envio.contactos) {
+        Vista.mostrarEstadoQuanty(
+          "No hay productos ni contactos para enviar.",
+          "error",
+        );
+        return;
+      }
+      const respuesta = await ApiQuanty.importar(clave, envio);
+      Vista.pintarResultadoQuanty(respuesta);
+      Vista.mostrarEstadoQuanty("Datos enviados a Quanty correctamente.");
+    });
   }
 
   function iniciar() {
     Modelo.cargar();
+    ControladorTabla.iniciar();
+    Vista.llenarClaveQuanty(Modelo.quanty.leerClave());
+    document
+      .querySelector("#quanty-form")
+      .addEventListener("submit", enviarAQuanty);
+    document
+      .querySelector("#quanty-test")
+      .addEventListener("click", probarClaveQuanty);
+    document
+      .querySelector("#quanty-forget")
+      .addEventListener("click", () => {
+        Modelo.quanty.borrarClave();
+        Vista.llenarClaveQuanty("");
+        Vista.limpiarResultadoQuanty();
+        Vista.mostrarEstadoQuanty("Clave eliminada de este navegador.");
+      });
     actualizarVista();
     Vista.renderizarPedidos(Modelo.pedidos.listar());
 
@@ -158,7 +209,7 @@ const Controlador = (() => {
         }
         cancelarEdicion();
         busqueda = "";
-        document.querySelector("#product-search").value = "";
+        Vista.limpiarBusqueda();
         categoriaActiva = "Todas";
         Vista.mostrarMensaje("Inventario de ejemplo restaurado.");
         actualizarVista();
@@ -169,20 +220,16 @@ const Controlador = (() => {
         evento.preventDefault();
         const formulario = evento.currentTarget;
         if (!formulario.reportValidity()) return;
-        const nombre = formulario.elements.nombre.value.trim();
+        const datos = Vista.leerContacto(formulario);
         try {
-          const pedido = Modelo.pedidos.agregar({
-            nombre,
-            email: formulario.elements.email.value.trim(),
-            telefono: formulario.elements.telefono.value.trim(),
-          });
+          const pedido = Modelo.pedidos.agregar(datos);
           formulario.reset();
-          mostrarMensajeContacto(
-            `Gracias, ${nombre}. Recibimos tu mensaje y pronto te contactaremos.`,
+          Vista.mostrarMensajeContacto(
+            `Gracias, ${datos.nombre}. Recibimos tu mensaje y pronto te contactaremos.`,
           );
           Vista.renderizarPedidos(Modelo.pedidos.listar(), pedido.id);
         } catch {
-          mostrarMensajeContacto(
+          Vista.mostrarMensajeContacto(
             "No se pudo guardar el mensaje en este navegador.",
             true,
           );
@@ -198,29 +245,19 @@ const Controlador = (() => {
         setTimeout(() => {
           Modelo.pedidos.eliminar(articulo.dataset.orderId);
           Vista.renderizarPedidos(Modelo.pedidos.listar());
-          mostrarMensajeContacto("Pedido eliminado.");
+          Vista.mostrarMensajeContacto("Pedido eliminado.");
         }, 260);
       });
 
-    const tema = document.querySelector(".theme-toggle");
-    if (localStorage.getItem("bruma-theme") === "dark") {
-      document.documentElement.dataset.theme = "dark";
-      tema.setAttribute("aria-label", "Activar modo claro");
-      tema.setAttribute("aria-pressed", "true");
-    }
-    tema.addEventListener("click", () => {
-      const oscuro = document.documentElement.dataset.theme !== "dark";
-      document.documentElement.dataset.theme = oscuro ? "dark" : "light";
-      tema.setAttribute(
-        "aria-label",
-        oscuro ? "Activar modo claro" : "Activar modo oscuro",
-      );
-      tema.setAttribute("aria-pressed", String(oscuro));
-      localStorage.setItem("bruma-theme", oscuro ? "dark" : "light");
-    });
-    console.info("Bruma Café: inventario cargado correctamente.");
+    if (Modelo.tema.esOscuro()) Vista.aplicarTema(true);
+    document
+      .querySelector(".theme-toggle")
+      .addEventListener("click", () => {
+        const oscuro = !Vista.temaEsOscuro();
+        Vista.aplicarTema(oscuro);
+        Modelo.tema.guardar(oscuro);
+      });
   }
 
-  document.addEventListener("DOMContentLoaded", iniciar);
   return { iniciar };
 })();

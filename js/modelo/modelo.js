@@ -3,6 +3,8 @@
 const Modelo = (() => {
   const productosKey = "bruma-cafe-productos";
   const pedidosKey = "bruma-cafe-pedidos";
+  const temaKey = "bruma-theme";
+  const claveQuantyKey = "bruma-cafe-quanty-clave";
   const precioMaximo = 1_000_000;
   const ejemplos = [
     {
@@ -119,7 +121,7 @@ const Modelo = (() => {
         );
       if (!datos.imagen) errores.push("La URL de imagen es obligatoria.");
       try {
-        const url = new URL(datos.imagen, document.baseURI);
+        const url = new URL(datos.imagen, location.href);
         if (!["http:", "https:"].includes(url.protocol))
           errores.push("La imagen debe usar una URL HTTP o HTTPS.");
       } catch {
@@ -178,6 +180,68 @@ const Modelo = (() => {
         (total, producto) => total + producto.precio * producto.cantidad,
         0,
       );
+    },
+    tema: {
+      esOscuro() {
+        try {
+          return localStorage.getItem(temaKey) === "dark";
+        } catch {
+          return false;
+        }
+      },
+      guardar(oscuro) {
+        try {
+          localStorage.setItem(temaKey, oscuro ? "dark" : "light");
+        } catch {
+          return;
+        }
+      },
+    },
+    quanty: {
+      leerClave() {
+        try {
+          return localStorage.getItem(claveQuantyKey) || "";
+        } catch {
+          return "";
+        }
+      },
+      guardarClave(clave) {
+        try {
+          localStorage.setItem(claveQuantyKey, clave);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      borrarClave() {
+        try {
+          localStorage.removeItem(claveQuantyKey);
+        } catch {
+          return;
+        }
+      },
+      construirEnvio() {
+        const envio = { source: "bruma-cafe" };
+        const contactos = leerPedidos().map(
+          ({ id, nombre, email, telefono }) => ({
+            id,
+            nombre,
+            email,
+            telefono,
+          }),
+        );
+        if (productos.length)
+          envio.productos = productos.map((producto) => ({
+            id: producto.id,
+            nombre: producto.nombre,
+            precio: producto.precio,
+            cantidad: producto.cantidad,
+            categoria: producto.categoria,
+            imagen: new URL(producto.imagen, location.href).href,
+          }));
+        if (contactos.length) envio.contactos = contactos;
+        return envio;
+      },
     },
     pedidos: {
       listar: leerPedidos,

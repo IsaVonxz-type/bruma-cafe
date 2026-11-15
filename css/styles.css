@@ -321,6 +321,34 @@ button:active {
   color: var(--accent-text);
 }
 
+.form-status.is-loading::before {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  content: "";
+  vertical-align: -0.1em;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#quanty-form button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+#quanty-form button {
+  margin: 12px 8px 0 0;
+}
+
 .record-form {
   max-width: 850px;
   margin: 0 0 34px;
@@ -687,8 +715,61 @@ button:active {
 
 .spec-layout {
   display: grid;
-  grid-template-columns: minmax(230px, 0.7fr) 1.3fr;
+  grid-template-columns: 1fr;
   gap: 60px;
+}
+
+.spec-layout dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 40px;
+}
+
+.data-table__tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 850px;
+  margin-bottom: 16px;
+}
+
+.data-table__count {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+th .data-table__sort {
+  display: block;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+th[aria-sort="ascending"] .data-table__sort::after {
+  content: " \25B2";
+}
+
+th[aria-sort="descending"] .data-table__sort::after {
+  content: " \25BC";
+}
+
+.data-table__pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.data-table__pager button {
+  min-height: 44px;
+}
+
+.data-table__pager button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 dl {

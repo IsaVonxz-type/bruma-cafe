@@ -1,0 +1,75 @@
+"use strict";
+
+const ControladorTabla = (() => {
+  const estado = { columna: "nombre", direccion: "asc", pagina: 1 };
+
+  function consultarActual() {
+    const filtros = VistaTabla.leerFiltros();
+    return ModeloTabla.consultar(Modelo.productos, { ...filtros, ...estado });
+  }
+
+  function actualizar() {
+    const categorias = [
+      ...new Set(Modelo.productos.map((producto) => producto.categoria)),
+    ];
+    const filtros = VistaTabla.leerFiltros();
+    const activa = categorias.includes(filtros.categoria)
+      ? filtros.categoria
+      : "Todas";
+    VistaTabla.pintarCategorias(categorias, activa);
+    const resultado = ModeloTabla.paginar(consultarActual(), estado.pagina);
+    estado.pagina = resultado.pagina;
+    VistaTabla.pintar(resultado, estado.columna, estado.direccion);
+  }
+
+  function reiniciarPagina() {
+    estado.pagina = 1;
+    actualizar();
+  }
+
+  function ordenarPor(columna) {
+    estado.direccion =
+      estado.columna === columna && estado.direccion === "asc" ? "desc" : "asc";
+    estado.columna = columna;
+    reiniciarPagina();
+  }
+
+  function exportarCsv() {
+    const lista = consultarActual();
+    VistaTabla.descargarCsv(ModeloTabla.aCsv(lista), "inventario-bruma.csv");
+    VistaTabla.mostrarMensaje(
+      `Se exportaron ${lista.length} registros a inventario-bruma.csv.`,
+    );
+  }
+
+  function iniciar() {
+    document
+      .querySelector("#table-search")
+      .addEventListener("input", reiniciarPagina);
+    document
+      .querySelector("#table-category")
+      .addEventListener("change", reiniciarPagina);
+    document
+      .querySelector("#table-stock")
+      .addEventListener("change", reiniciarPagina);
+    document
+      .querySelector("#data-table thead")
+      .addEventListener("click", (evento) => {
+        const boton = evento.target.closest("button[data-column]");
+        if (boton) ordenarPor(boton.dataset.column);
+      });
+    document.querySelector("#table-prev").addEventListener("click", () => {
+      estado.pagina -= 1;
+      actualizar();
+    });
+    document.querySelector("#table-next").addEventListener("click", () => {
+      estado.pagina += 1;
+      actualizar();
+    });
+    document
+      .querySelector("#table-export")
+      .addEventListener("click", exportarCsv);
+  }
+
+  return { iniciar, actualizar };
+})();

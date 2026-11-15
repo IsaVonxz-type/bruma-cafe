@@ -13,6 +13,7 @@ const Vista = (() => {
   const productList = document.querySelector("#product-list");
   const categoryFilters = document.querySelector("#category-filters");
   const recordForm = document.querySelector("#record-form");
+  let temporizadorContacto;
 
   return {
     leerFormulario() {
@@ -127,22 +128,38 @@ const Vista = (() => {
         modelo.totalUnidades();
       document.querySelector("#summary-value").textContent =
         formatoPrecio.format(modelo.valorInventario());
-      const tabla = document.querySelector("#summary-table");
-      tabla.replaceChildren();
-      productos.forEach((producto) => {
-        const fila = document.createElement("tr");
-        [
-          producto.nombre,
-          producto.categoria,
-          formatoPrecio.format(producto.precio),
-          String(producto.cantidad),
-        ].forEach((valor) => {
-          const celda = document.createElement("td");
-          celda.textContent = valor;
-          fila.append(celda);
-        });
-        tabla.append(fila);
-      });
+    },
+    leerContacto(formulario) {
+      return {
+        nombre: formulario.elements.nombre.value.trim(),
+        email: formulario.elements.email.value.trim(),
+        telefono: formulario.elements.telefono.value.trim(),
+      };
+    },
+    mostrarMensajeContacto(mensaje, error = false) {
+      const estado = document.querySelector("#form-status");
+      clearTimeout(temporizadorContacto);
+      estado.textContent = mensaje;
+      estado.classList.toggle("has-error", error);
+      if (mensaje)
+        temporizadorContacto = setTimeout(() => {
+          estado.textContent = "";
+        }, 5000);
+    },
+    limpiarBusqueda() {
+      document.querySelector("#product-search").value = "";
+    },
+    aplicarTema(oscuro) {
+      const boton = document.querySelector(".theme-toggle");
+      document.documentElement.dataset.theme = oscuro ? "dark" : "light";
+      boton.setAttribute(
+        "aria-label",
+        oscuro ? "Activar modo claro" : "Activar modo oscuro",
+      );
+      boton.setAttribute("aria-pressed", String(oscuro));
+    },
+    temaEsOscuro() {
+      return document.documentElement.dataset.theme === "dark";
     },
     confirmar(titulo, mensaje, accion, peligro = false) {
       const dialogo = document.querySelector("#confirm-dialog");
@@ -190,6 +207,55 @@ const Vista = (() => {
         articulo.append(nombre, datos, telefono, eliminar);
         contenedor.append(articulo);
       });
+    },
+    leerClaveQuanty() {
+      return document.querySelector("#quanty-key").value.trim();
+    },
+    llenarClaveQuanty(clave) {
+      document.querySelector("#quanty-key").value = clave;
+    },
+    mostrarEstadoQuanty(mensaje, tipo = "ok") {
+      const estado = document.querySelector("#quanty-status");
+      estado.textContent = mensaje;
+      estado.classList.toggle("has-error", tipo === "error");
+      estado.classList.toggle("is-loading", tipo === "loading");
+    },
+    cargandoQuanty(cargando) {
+      const formulario = document.querySelector("#quanty-form");
+      formulario.setAttribute("aria-busy", String(cargando));
+      formulario
+        .querySelectorAll("button")
+        .forEach((boton) => (boton.disabled = cargando));
+    },
+    pintarResultadoQuanty(respuesta) {
+      const contenedor = document.querySelector("#quanty-result");
+      contenedor.replaceChildren();
+      const secciones = [
+        ["Productos", respuesta.productos],
+        ["Contactos", respuesta.contactos],
+      ].filter(([, datos]) => datos);
+      if (!secciones.length) return;
+      const encabezado = document.createElement("h3");
+      encabezado.textContent = "Resultado del envío";
+      contenedor.append(encabezado);
+      secciones.forEach(([titulo, datos]) => {
+        const articulo = document.createElement("article");
+        articulo.className = "saved-order";
+        const nombre = document.createElement("h3");
+        nombre.textContent = titulo;
+        const resumen = document.createElement("p");
+        resumen.textContent = `Recibidos: ${datos.received} · Creados: ${datos.created} · Actualizados: ${datos.updated} · Omitidos: ${datos.skipped.length}`;
+        articulo.append(nombre, resumen);
+        datos.skipped.forEach((omitido) => {
+          const detalle = document.createElement("p");
+          detalle.textContent = `Omitido ${omitido.externalId}: ${omitido.reason}`;
+          articulo.append(detalle);
+        });
+        contenedor.append(articulo);
+      });
+    },
+    limpiarResultadoQuanty() {
+      document.querySelector("#quanty-result").replaceChildren();
     },
     darFormatoPrecio(valor) {
       return formatoPrecio.format(valor);
