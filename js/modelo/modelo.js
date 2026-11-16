@@ -6,6 +6,7 @@ const Modelo = (() => {
   const temaKey = "bruma-theme";
   const claveQuantyKey = "bruma-cafe-quanty-clave";
   const precioMaximo = 1_000_000;
+  const umbralStockBajo = 5;
   const ejemplos = [
     {
       id: 1,
@@ -168,6 +169,10 @@ const Modelo = (() => {
       if (persistir()) return true;
       productos = anteriores;
       return false;
+    },
+    estadoStock(producto) {
+      if (producto.cantidad === 0) return "agotado";
+      return producto.cantidad <= umbralStockBajo ? "bajo" : "disponible";
     },
     totalUnidades() {
       return productos.reduce(

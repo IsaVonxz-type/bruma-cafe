@@ -31,16 +31,50 @@ const VistaTabla = (() => {
       cuerpo.replaceChildren();
       resultado.items.forEach((producto) => {
         const fila = document.createElement("tr");
+        const celdaProducto = document.createElement("td");
+        const contenido = document.createElement("div");
+        contenido.className = "cell-prod";
+        const miniatura = document.createElement("span");
+        miniatura.className = "thumb";
+        miniatura.append(Vista.crearMiniatura(producto));
+        contenido.append(miniatura, producto.nombre);
+        celdaProducto.append(contenido);
+        const celdaCategoria = document.createElement("td");
+        celdaCategoria.textContent = producto.categoria;
+        const celdaPrecio = document.createElement("td");
+        celdaPrecio.className = "num";
+        celdaPrecio.textContent = formatoPrecio.format(producto.precio);
+        const celdaStock = document.createElement("td");
+        celdaStock.className = "num";
+        const stock = document.createElement("div");
+        stock.className = "stockbar";
+        const cantidad = document.createElement("span");
+        cantidad.textContent = String(producto.cantidad);
+        stock.append(Vista.crearEtiquetaStock(producto), cantidad);
+        celdaStock.append(stock);
+        const celdaAcciones = document.createElement("td");
+        const acciones = document.createElement("div");
+        acciones.className = "row-actions";
         [
-          producto.nombre,
-          producto.categoria,
-          formatoPrecio.format(producto.precio),
-          String(producto.cantidad),
-        ].forEach((valor) => {
-          const celda = document.createElement("td");
-          celda.textContent = valor;
-          fila.append(celda);
+          ["Editar", "btn btn-secondary btn-sm edit-product"],
+          ["Eliminar", "btn btn-danger btn-sm delete-product"],
+        ].forEach(([texto, clase]) => {
+          const boton = document.createElement("button");
+          boton.type = "button";
+          boton.className = clase;
+          boton.dataset.id = producto.id;
+          boton.textContent = texto;
+          boton.setAttribute("aria-label", `${texto} ${producto.nombre}`);
+          acciones.append(boton);
         });
+        celdaAcciones.append(acciones);
+        fila.append(
+          celdaProducto,
+          celdaCategoria,
+          celdaPrecio,
+          celdaStock,
+          celdaAcciones,
+        );
         cuerpo.append(fila);
       });
       document.querySelector("#table-empty").hidden = resultado.total > 0;

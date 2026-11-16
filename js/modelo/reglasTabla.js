@@ -9,6 +9,13 @@ const ModeloTabla = (() => {
     cantidad: { etiqueta: "Cantidad", numerica: true },
   };
 
+  function coincideDisponibilidad(producto, disponibilidad) {
+    if (disponibilidad === "disponibles") return producto.cantidad > 0;
+    if (disponibilidad === "bajo") return Modelo.estadoStock(producto) === "bajo";
+    if (disponibilidad === "agotados") return producto.cantidad === 0;
+    return true;
+  }
+
   function celdaCsv(valor) {
     const texto = String(valor);
     const seguro = /^[=+\-@\t\r]/.test(texto) ? `'${texto}` : texto;
@@ -29,10 +36,10 @@ const ModeloTabla = (() => {
           const coincideCategoria =
             filtros.categoria === "Todas" ||
             producto.categoria === filtros.categoria;
-          const coincideStock =
-            filtros.disponibilidad === "todos" ||
-            (filtros.disponibilidad === "agotados") ===
-              (producto.cantidad === 0);
+          const coincideStock = coincideDisponibilidad(
+            producto,
+            filtros.disponibilidad,
+          );
           return coincideTexto && coincideCategoria && coincideStock;
         })
         .sort((a, b) => {

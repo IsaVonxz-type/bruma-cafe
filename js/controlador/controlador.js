@@ -15,6 +15,7 @@ const Controlador = (() => {
       categoriaActiva = "Todas";
     Vista.pintarProductos(Modelo.productos, busqueda, categoriaActiva);
     Vista.pintarResumen(Modelo.productos, Modelo);
+    Vista.pintarDestacados(Modelo.productos);
     ControladorTabla.actualizar();
   }
 
@@ -168,23 +169,31 @@ const Controlador = (() => {
         categoriaActiva = boton.dataset.category;
         actualizarVista();
       });
+    document.querySelector("#new-product").addEventListener("click", () => {
+      cancelarEdicion();
+      Vista.abrirFormulario();
+    });
     document
-      .querySelector("#product-list")
+      .querySelector("#product-dialog")
+      .addEventListener("close", cancelarEdicion);
+    document
+      .querySelector("#record-form")
+      .addEventListener("input", () => Vista.pintarVistaPrevia());
+    window.addEventListener("hashchange", () =>
+      Vista.mostrarRuta(location.hash),
+    );
+    Vista.mostrarRuta(location.hash);
+    document
+      .querySelector("#table-body")
       .addEventListener("click", (evento) => {
         const boton = evento.target.closest("button[data-id]");
-        if (!boton) {
-          evento.target
-            .closest(".product-card")
-            ?.classList.toggle("is-selected");
-          return;
-        }
+        if (!boton) return;
         const id = Number(boton.dataset.id);
         if (boton.classList.contains("edit-product")) {
           const producto = Modelo.buscarPorId(id);
           if (producto) {
             idEditando = id;
             Vista.llenarFormulario(producto);
-            Vista.mostrarMensaje(`Editando ${producto.nombre}.`);
           }
         } else if (boton.classList.contains("delete-product")) {
           eliminarProducto(id);

@@ -10,12 +10,70 @@ const Vista = (() => {
     dateStyle: "medium",
     timeStyle: "short",
   });
+  const secciones = ["tienda", "contacto", "panel"];
+  const etiquetasStock = {
+    disponible: "Disponible",
+    bajo: "Stock bajo",
+    agotado: "Agotado",
+  };
   const productList = document.querySelector("#product-list");
   const categoryFilters = document.querySelector("#category-filters");
   const recordForm = document.querySelector("#record-form");
+  const dialogoProducto = document.querySelector("#product-dialog");
+  const aviso = document.querySelector("#toast");
   let temporizadorContacto;
+  let temporizadorAviso;
+
+  function crearElemento(etiqueta, clase, texto) {
+    const elemento = document.createElement(etiqueta);
+    if (clase) elemento.className = clase;
+    if (texto !== undefined) elemento.textContent = texto;
+    return elemento;
+  }
+
+  function mostrarAviso(mensaje) {
+    clearTimeout(temporizadorAviso);
+    aviso.textContent = mensaje;
+    aviso.classList.add("is-visible");
+    temporizadorAviso = setTimeout(
+      () => aviso.classList.remove("is-visible"),
+      3200,
+    );
+  }
 
   return {
+    mostrarRuta(hash) {
+      const ruta = hash.replace("#", "");
+      if (ruta === "catalogo") {
+        this.activarSeccion("tienda");
+        document.querySelector("#catalogo").scrollIntoView();
+        return;
+      }
+      if (ruta && !secciones.includes(ruta)) return;
+      this.activarSeccion(ruta || "tienda");
+      window.scrollTo(0, 0);
+    },
+    activarSeccion(activa) {
+      secciones.forEach((seccion) => {
+        document.querySelector(`#view-${seccion}`).hidden = seccion !== activa;
+      });
+      document.querySelectorAll(".nav a[data-route]").forEach((enlace) => {
+        if (enlace.dataset.route === activa)
+          enlace.setAttribute("aria-current", "page");
+        else enlace.removeAttribute("aria-current");
+      });
+    },
+    crearEtiquetaStock(producto) {
+      const estado = Modelo.estadoStock(producto);
+      return crearElemento("span", `pill ${estado}`, etiquetasStock[estado]);
+    },
+    crearMiniatura(producto, clase) {
+      const imagen = crearElemento("img", clase);
+      imagen.src = producto.imagen;
+      imagen.alt = `Café ${producto.nombre}`;
+      imagen.loading = "lazy";
+      return imagen;
+    },
     leerFormulario() {
       const datos = new FormData(recordForm);
       return {
@@ -26,6 +84,11 @@ const Vista = (() => {
         imagen: String(datos.get("imagen") || "").trim(),
       };
     },
+    abrirFormulario() {
+      if (!dialogoProducto.open) dialogoProducto.showModal();
+      this.pintarVistaPrevia();
+      recordForm.elements.nombre.focus();
+    },
     llenarFormulario(producto) {
       for (const [campo, valor] of Object.entries(producto)) {
         if (recordForm.elements[campo])
@@ -34,21 +97,39 @@ const Vista = (() => {
       document.querySelector("#record-form-title").textContent =
         "Editar producto";
       document.querySelector("#save-product").textContent = "Guardar cambios";
-      document.querySelector("#cancel-edit").hidden = false;
-      document
-        .querySelector("#catalogo")
-        .scrollIntoView({ behavior: "smooth", block: "start" });
-      recordForm.elements.nombre.focus();
+      this.abrirFormulario();
     },
     limpiarFormulario() {
       recordForm.reset();
       document.querySelector("#record-form-title").textContent =
-        "Agregar producto";
+        "Nuevo producto";
       document.querySelector("#save-product").textContent =
         "Agregar al inventario";
-      document.querySelector("#cancel-edit").hidden = true;
+      document.querySelector("#record-status").textContent = "";
+      if (dialogoProducto.open) dialogoProducto.close();
+    },
+    pintarVistaPrevia() {
+      const datos = this.leerFormulario();
+      const contenedor = document.querySelector("#preview-thumb");
+      contenedor.replaceChildren();
+      if (datos.imagen)
+        contenedor.append(
+          this.crearMiniatura({ imagen: datos.imagen, nombre: datos.nombre }),
+        );
+      document.querySelector("#preview-name").textContent =
+        datos.nombre || "Nombre del producto";
+      document.querySelector("#preview-meta").textContent =
+        `${datos.categoria || "Sin categoría"} · ${
+          datos.precio > 0
+            ? formatoPrecio.format(datos.precio)
+            : "Sin precio"
+        }`;
     },
     mostrarMensaje(mensaje, tipo = "ok") {
+      if (!dialogoProducto.open) {
+        if (mensaje) mostrarAviso(mensaje);
+        return;
+      }
       const status = document.querySelector("#record-status");
       status.textContent = mensaje;
       status.classList.toggle("has-error", tipo === "error");
@@ -66,37 +147,44 @@ const Vista = (() => {
       });
       productList.replaceChildren();
       filtrados.forEach((producto) => {
-        const tarjeta = document.createElement("article");
-        tarjeta.className = `product-card${producto.cantidad === 0 ? " is-empty" : ""}`;
+        const agotado = Modelo.estadoStock(producto) === "agotado";
+        const tarjeta = crearElemento(
+          "article",
+          `card${agotado ? " is-out" : ""}`,
+        );
         tarjeta.dataset.id = producto.id;
-        const imagen = document.createElement("img");
-        imagen.src = producto.imagen;
-        imagen.alt = `Café ${producto.nombre}`;
-        imagen.loading = "lazy";
-        const etiqueta = document.createElement("span");
-        etiqueta.className = "product-tag";
-        etiqueta.textContent = producto.categoria;
-        const titulo = document.createElement("h3");
-        titulo.textContent = producto.nombre;
-        const detalle = document.createElement("p");
-        detalle.textContent = `${formatoPrecio.format(producto.precio)} · ${producto.cantidad} bolsas`;
-        const stock = document.createElement("p");
-        stock.className = "stock-status";
-        stock.textContent = producto.cantidad === 0 ? "Agotado" : "Disponible";
-        const acciones = document.createElement("div");
-        acciones.className = "product-actions";
-        [
-          ["Editar", "edit-product"],
-          ["Eliminar", "delete-product"],
-        ].forEach(([texto, clase]) => {
-          const boton = document.createElement("button");
-          boton.type = "button";
-          boton.className = clase;
-          boton.dataset.id = producto.id;
-          boton.textContent = texto;
-          acciones.append(boton);
-        });
-        tarjeta.append(imagen, etiqueta, titulo, detalle, stock, acciones);
+        const arte = crearElemento("div", "card-art");
+        arte.append(
+          this.crearMiniatura(producto),
+          this.crearEtiquetaStock(producto),
+        );
+        const cuerpo = crearElemento("div", "card-body");
+        const precio = crearElemento(
+          "div",
+          "price",
+          formatoPrecio.format(producto.precio),
+        );
+        precio.append(
+          crearElemento(
+            "small",
+            "",
+            producto.categoria === "Accesorios" ? "por unidad" : "bolsa de 340 g",
+          ),
+        );
+        const pedir = crearElemento(
+          "a",
+          `btn btn-sm ${agotado ? "btn-secondary" : "btn-primary"}`,
+          agotado ? "Avísame" : "Pedir",
+        );
+        pedir.href = "#contacto";
+        const meta = crearElemento("div", "card-meta");
+        meta.append(precio, pedir);
+        cuerpo.append(
+          crearElemento("span", "card-cat", producto.categoria),
+          crearElemento("h3", "", producto.nombre),
+          meta,
+        );
+        tarjeta.append(arte, cuerpo);
         productList.append(tarjeta);
       });
       document.querySelector("#result-count").textContent =
@@ -111,23 +199,64 @@ const Vista = (() => {
       ];
       categoryFilters.replaceChildren();
       categorias.forEach((categoria) => {
-        const boton = document.createElement("button");
+        const total =
+          categoria === "Todas"
+            ? productos.length
+            : productos.filter((producto) => producto.categoria === categoria)
+                .length;
+        const boton = crearElemento("button", "chip", categoria);
         boton.type = "button";
-        boton.className = `filter-button${categoria === categoriaActiva ? " is-selected" : ""}`;
         boton.dataset.category = categoria;
-        boton.textContent = categoria;
+        boton.setAttribute("aria-pressed", String(categoria === categoriaActiva));
+        boton.append(crearElemento("small", "", String(total)));
         categoryFilters.append(boton);
       });
     },
+    pintarDestacados(productos) {
+      const lista = document.querySelector("#ranking");
+      lista.replaceChildren();
+      const destacados = productos
+        .filter((producto) => producto.cantidad > 0)
+        .sort((a, b) => b.cantidad - a.cantidad)
+        .slice(0, 5);
+      if (!destacados.length) {
+        const vacio = crearElemento("li");
+        vacio.append(crearElemento("span", "", "Sin productos disponibles"));
+        lista.append(vacio);
+      }
+      destacados.forEach((producto) => {
+        const item = crearElemento("li");
+        item.append(
+          crearElemento("span", "", producto.nombre),
+          crearElemento("em", "", `${producto.cantidad} en stock`),
+        );
+        lista.append(item);
+      });
+      document.querySelector("#trust-available").textContent =
+        `${productos.filter((producto) => producto.cantidad > 0).length} de ${productos.length}`;
+    },
     pintarResumen(productos, modelo) {
-      document.querySelector("#summary-total").textContent = productos.length;
-      document.querySelector("#summary-empty").textContent = productos.filter(
+      const agotados = productos.filter(
         (producto) => producto.cantidad === 0,
       ).length;
+      const bajos = productos.filter(
+        (producto) => modelo.estadoStock(producto) === "bajo",
+      ).length;
+      document.querySelector("#summary-total").textContent = productos.length;
+      document.querySelector("#summary-empty").textContent = agotados;
+      document.querySelector("#summary-low").textContent = bajos;
       document.querySelector("#summary-quantity").textContent =
         modelo.totalUnidades();
       document.querySelector("#summary-value").textContent =
         formatoPrecio.format(modelo.valorInventario());
+      document
+        .querySelector("#summary-empty")
+        .closest(".kpi")
+        .classList.toggle("warn", agotados > 0);
+      document
+        .querySelector("#summary-low")
+        .closest(".kpi")
+        .classList.toggle("warn", bajos > 0);
     },
     leerContacto(formulario) {
       return {
@@ -202,7 +331,7 @@ const Vista = (() => {
         telefono.textContent = `Teléfono: ${pedido.telefono}`;
         const eliminar = document.createElement("button");
         eliminar.type = "button";
-        eliminar.className = "remove-order";
+        eliminar.className = "btn btn-danger btn-sm remove-order";
         eliminar.textContent = "Eliminar";
         articulo.append(nombre, datos, telefono, eliminar);
         contenedor.append(articulo);
@@ -219,6 +348,7 @@ const Vista = (() => {
       estado.textContent = mensaje;
       estado.classList.toggle("has-error", tipo === "error");
       estado.classList.toggle("is-loading", tipo === "loading");
+      estado.classList.toggle("is-ok", tipo === "ok" && Boolean(mensaje));
     },
     cargandoQuanty(cargando) {
       const formulario = document.querySelector("#quanty-form");

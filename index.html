@@ -9,6 +9,8 @@
     />
     <title>Bruma Café | Café de especialidad</title>
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap"
       rel="stylesheet"
@@ -16,8 +18,10 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
     <header class="topbar">
-      <a class="brand" href="#home">
+      <a class="brand" href="#tienda">
         <img
           class="brand-mark"
           src="assets/logo.svg"
@@ -27,9 +31,12 @@
         />
         <span>Bruma Café</span>
       </a>
-      <nav aria-label="Navegación principal">
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#tienda" data-route="tienda">Tienda</a>
+        <a href="#contacto" data-route="contacto">Contacto</a>
+        <a href="#panel" data-route="panel">Panel de inventario</a>
         <button
-          class="theme-toggle"
+          class="icon-btn theme-toggle"
           type="button"
           aria-label="Activar modo oscuro"
           aria-pressed="false"
@@ -52,326 +59,163 @@
             <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" />
           </svg>
         </button>
-        <a href="#catalogo">Inventario</a>
-        <a href="#contacto">Contacto</a>
-        <a href="#faq">Ayuda</a>
       </nav>
     </header>
 
-    <div class="page-layout">
-      <aside aria-label="Filtros y resumen del inventario">
-        <p>Filtrar por categoría</p>
-        <nav id="category-filters" aria-label="Categorías"></nav>
-        <div class="sidebar-summary" aria-labelledby="summary-title">
-          <p id="summary-title">Resumen del inventario</p>
-          <dl>
-            <dt>Registros</dt>
-            <dd id="summary-total">0</dd>
-            <dt>Agotados</dt>
-            <dd id="summary-empty">0</dd>
-            <dt>Unidades</dt>
-            <dd id="summary-quantity">0</dd>
-            <dt>Valor inventario</dt>
-            <dd id="summary-value">$ 0</dd>
-          </dl>
-        </div>
-        <p>Explorar</p>
-        <nav aria-label="Secciones de la página">
-          <a href="#home">01 Inicio</a>
-          <a href="#catalogo">02 Catálogo</a>
-          <a href="#tabla">03 Tabla de inventario</a>
-          <a href="#promociones">04 Promociones</a>
-          <a href="#categorias">05 Categorías</a>
-          <a href="#indicadores">06 Indicadores</a>
-          <a href="#contacto">07 Contacto</a>
-          <a href="#faq">08 Preguntas frecuentes</a>
-          <a href="#quanty">09 Sincronizar con Quanty</a>
-        </nav>
-      </aside>
-
-      <main>
-        <section id="home" class="hero">
+    <main id="contenido">
+      <div id="view-tienda">
+        <section class="wrap hero" id="home" aria-labelledby="hero-title">
           <div>
-            <p class="eyebrow"><em>Cosecha 2026 · Colombia</em></p>
-            <h1>Café honesto.<br />Sabor inolvidable.</h1>
-            <p class="hero-copy">
+            <p class="eyebrow">Cosecha 2026 · Huila, Colombia</p>
+            <h1 id="hero-title">Café honesto.<br />Sabor inolvidable.</h1>
+            <p class="lead">
               Granos de origen tostados en pequeños lotes para convertir cada
               mañana en un ritual.
             </p>
-            <a class="button" href="#catalogo">Descubrir la cosecha</a>
-          </div>
-          <div class="hero-art" aria-hidden="true">
-            <span>Origen</span>
-            <strong>1.850</strong>
-            <small>metros sobre el mar</small>
-          </div>
-        </section>
-
-        <section id="catalogo">
-          <div class="section-heading">
-            <p class="eyebrow">Selección del tostador</p>
-            <h2>Inventario de café</h2>
-          </div>
-          <form id="record-form" class="record-form" novalidate>
-            <h3 id="record-form-title">Agregar producto</h3>
-            <div class="form-grid">
-              <div class="field">
-                <label for="product-name">Nombre del producto</label
-                ><input
-                  id="product-name"
-                  name="nombre"
-                  required
-                  minlength="3"
-                />
-              </div>
-              <div class="field">
-                <label for="product-price">Precio (COP)</label
-                ><input
-                  id="product-price"
-                  name="precio"
-                  type="number"
-                  min="1"
-                  max="1000000"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="product-category">Categoría</label
-                ><select id="product-category" name="categoria" required>
-                  <option value="">Selecciona categoría</option>
-                  <option>Grano</option>
-                  <option>Molido</option>
-                  <option>Accesorios</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="product-quantity">Cantidad (bolsas)</label
-                ><input
-                  id="product-quantity"
-                  name="cantidad"
-                  type="number"
-                  min="0"
-                  step="1"
-                  required
-                />
-              </div>
-              <div class="field full-width">
-                <label for="product-image">URL de imagen</label
-                ><input
-                  id="product-image"
-                  name="imagen"
-                  type="url"
-                  placeholder="https://..."
-                  required
-                />
-              </div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#catalogo"
+                >Descubrir la cosecha</a
+              >
+              <a class="btn btn-secondary" href="#contacto">Hacer un pedido</a>
             </div>
-            <button id="save-product" type="submit">
-              Agregar al inventario
-            </button>
-            <button
-              id="cancel-edit"
-              class="confirm-cancel"
-              type="button"
-              hidden
-            >
-              Cancelar edición
-            </button>
-            <p
-              id="record-status"
-              class="form-status"
-              role="status"
-              aria-live="polite"
-            ></p>
-          </form>
-          <div class="inventory-actions">
-            <button id="restore-products" class="confirm-cancel" type="button">
-              Restaurar productos de ejemplo
-            </button>
-          </div>
-          <div class="search-row">
-            <label for="product-search">Buscar productos</label
-            ><input
-              id="product-search"
-              type="search"
-              placeholder="Nombre o categoría..."
-            />
-            <p id="result-count" aria-live="polite"></p>
-          </div>
-          <p id="empty-results" class="empty-results" hidden>
-            No hay coincidencias para esta búsqueda.
-          </p>
-          <div id="product-list" class="product-grid" aria-live="polite"></div>
-        </section>
-
-        <section id="especificaciones">
-          <div class="section-heading">
-            <p class="eyebrow">De la finca a tu taza</p>
-            <h2>Especificaciones</h2>
-          </div>
-          <div class="spec-layout">
-            <dl>
-              <dt>Origen</dt>
-              <dd>Huila, Colombia</dd>
-              <dt>Variedad</dt>
-              <dd>Caturra y Bourbon rosado</dd>
-              <dt>Proceso</dt>
-              <dd>Lavado, secado al sol</dd>
-              <dt>Presentación</dt>
-              <dd>Bolsa de 340 g</dd>
+            <dl class="hero-facts">
+              <div>
+                <dt>Origen</dt>
+                <dd>Huila</dd>
+              </div>
+              <div>
+                <dt>Variedad</dt>
+                <dd>Caturra y Bourbon</dd>
+              </div>
+              <div>
+                <dt>Proceso</dt>
+                <dd>Lavado</dd>
+              </div>
+              <div>
+                <dt>Bolsa</dt>
+                <dd>340 g</dd>
+              </div>
             </dl>
           </div>
+          <figure class="hero-card">
+            <svg
+              viewBox="0 0 400 500"
+              preserveAspectRatio="xMidYMid slice"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient id="hero-gradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#2d4a3a" />
+                  <stop offset="1" stop-color="#132821" />
+                </linearGradient>
+              </defs>
+              <rect width="400" height="500" fill="url(#hero-gradient)" />
+              <circle cx="300" cy="120" r="70" fill="#304b38" />
+              <path d="M60 330 190 130l130 200z" fill="#f1eadb" opacity=".95" />
+              <path d="m190 130 40 62-40 38-40-38z" fill="#e96332" />
+              <path
+                d="M40 350q40-22 80 0t80 0 80 0 80 0M60 385q40-22 80 0t80 0 80 0"
+                fill="none"
+                stroke="#f1eadb"
+                stroke-width="7"
+                stroke-linecap="round"
+                opacity=".7"
+              />
+            </svg>
+            <figcaption>
+              <span>Altura del cultivo</span>
+              <strong>1.850 m</strong>
+            </figcaption>
+          </figure>
         </section>
 
-        <section id="tabla">
-          <div class="section-heading">
-            <p class="eyebrow">Consulta y exportación</p>
-            <h2>Tabla de inventario</h2>
+        <section class="wrap" id="catalogo" aria-labelledby="catalogo-title">
+          <div class="sec-head">
+            <p class="eyebrow">Selección del tostador</p>
+            <h2 id="catalogo-title">Nuestro café</h2>
+            <p>
+              Cada lote se tuesta por encargo. Filtra por tipo o busca por
+              nombre.
+            </p>
           </div>
-          <div class="data-table__tools">
-            <div class="field">
-              <label for="table-search">Buscar en la tabla</label>
+          <div class="toolbar">
+            <div class="search">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              <label class="sr" for="product-search">Buscar productos</label>
               <input
-                id="table-search"
+                id="product-search"
                 type="search"
-                placeholder="Nombre o categoría..."
+                placeholder="Buscar por nombre o categoría"
               />
             </div>
-            <div class="field">
-              <label for="table-category">Categoría</label>
-              <select id="table-category"></select>
-            </div>
-            <div class="field">
-              <label for="table-stock">Disponibilidad</label>
-              <select id="table-stock">
-                <option value="todos">Todos</option>
-                <option value="disponibles">Disponibles</option>
-                <option value="agotados">Agotados</option>
-              </select>
-            </div>
+            <div
+              id="category-filters"
+              class="chips"
+              role="group"
+              aria-label="Filtrar por categoría"
+            ></div>
           </div>
-          <p id="table-count" class="data-table__count" aria-live="polite"></p>
-          <div class="table-wrap">
-            <table id="data-table">
-              <caption>
-                Inventario de Bruma Café
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col" data-column="nombre" aria-sort="ascending">
-                    <button class="data-table__sort" type="button" data-column="nombre">Producto</button>
-                  </th>
-                  <th scope="col" data-column="categoria" aria-sort="none">
-                    <button class="data-table__sort" type="button" data-column="categoria">Categoría</button>
-                  </th>
-                  <th scope="col" data-column="precio" aria-sort="none">
-                    <button class="data-table__sort" type="button" data-column="precio">Precio</button>
-                  </th>
-                  <th scope="col" data-column="cantidad" aria-sort="none">
-                    <button class="data-table__sort" type="button" data-column="cantidad">Cantidad</button>
-                  </th>
-                </tr>
-              </thead>
-              <tbody id="table-body"></tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="4">
-                    <em>Todos los precios incluyen IVA.</em>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+          <p id="result-count" class="result-count" aria-live="polite"></p>
+          <div id="product-list" class="grid"></div>
+          <div id="empty-results" class="empty" hidden>
+            <strong>No encontramos ese café</strong>
+            <span>Prueba con otro nombre o quita el filtro.</span>
           </div>
-          <p id="table-empty" class="empty-results" hidden>
-            No hay registros que coincidan con los filtros.
-          </p>
-          <div class="data-table__pager">
-            <button id="table-prev" class="confirm-cancel" type="button">
-              Anterior
-            </button>
-            <span id="table-page" aria-live="polite"></span>
-            <button id="table-next" class="confirm-cancel" type="button">
-              Siguiente
-            </button>
-            <button id="table-export" type="button">Exportar a CSV</button>
-          </div>
-          <p id="table-status" class="form-status" role="status" aria-live="polite"></p>
         </section>
 
-        <section id="promociones" class="dark-section">
-          <div class="section-heading">
-            <p class="eyebrow">Nuestra selección</p>
-            <h2>Productos destacados</h2>
+        <section class="wrap dark-band" aria-labelledby="destacados-title">
+          <div class="sec-head">
+            <p class="eyebrow">Los más disponibles</p>
+            <h2 id="destacados-title">Destacados de la semana</h2>
+            <p>Calculados a partir del inventario actual.</p>
           </div>
-          <ol class="ranking">
-            <li><span>Sierra Dulce</span><strong>Grano</strong></li>
-            <li><span>Niebla Rosa</span><strong>Grano</strong></li>
-            <li><span>Monte Negro</span><strong>Molido</strong></li>
-            <li><span>Caturra Honey</span><strong>Grano</strong></li>
-            <li><span>Prensa Bruma</span><strong>Accesorios</strong></li>
-          </ol>
+          <ol id="ranking" class="ranking"></ol>
         </section>
 
-        <section id="categorias">
-          <div class="section-heading">
-            <p class="eyebrow">Productos por tipo</p>
-            <h2>Categorías del inventario</h2>
-          </div>
-          <ul class="categories">
-            <li>Grano</li>
-            <li>Molido</li>
-            <li>Accesorios</li>
-          </ul>
-        </section>
-
-        <section id="indicadores">
-          <div class="section-heading">
+        <section class="wrap" aria-labelledby="confianza-title">
+          <div class="sec-head">
             <p class="eyebrow">Transparencia en cada lote</p>
-            <h2>Indicadores</h2>
+            <h2 id="confianza-title">Lo que puedes esperar</h2>
           </div>
-          <div class="score-grid">
-            <div class="score-card">
-              <label for="stock"
-                >Stock de Niebla Rosa <strong>28%</strong></label
-              >
-              <progress id="stock" value="28" max="100">28%</progress>
-              <p>Últimas 14 bolsas disponibles.</p>
+          <div class="trust">
+            <div>
+              <strong id="trust-available">0 de 0</strong>
+              <span>productos disponibles hoy</span>
             </div>
-            <div class="score-card">
-              <label for="reviews"
-                >Satisfacción de clientes <strong>4.8/5</strong></label
-              >
-              <meter
-                id="reviews"
-                min="0"
-                max="5"
-                low="3"
-                high="4"
-                optimum="5"
-                value="4.8"
-              >
-                4.8 de 5
-              </meter>
-              <p>Basado en 286 compras verificadas.</p>
+            <div>
+              <strong>4.8/5</strong>
+              <span>satisfacción, 286 compras verificadas</span>
+            </div>
+            <div>
+              <strong>2 a 4 días</strong>
+              <span>entrega dentro de Colombia</span>
             </div>
           </div>
         </section>
+      </div>
 
-        <section id="contacto" class="contact-section">
-          <div class="section-heading">
-            <p class="eyebrow">Tu próximo pedido</p>
-            <h2>Contacto y registro</h2>
-          </div>
-          <form id="contact-form">
-            <fieldset>
-              <legend>Datos personales</legend>
-              <div class="form-grid">
+      <div id="view-contacto" hidden>
+        <section class="wrap contact" aria-labelledby="contacto-title">
+          <div class="contact-grid">
+            <div>
+              <div class="sec-head">
+                <p class="eyebrow">Tu próximo pedido</p>
+                <h2 id="contacto-title">Contacto</h2>
+                <p>
+                  Déjanos tus datos y te escribimos para confirmar el pedido.
+                </p>
+              </div>
+              <form id="contact-form">
                 <div class="field">
                   <label for="nombre">Nombre completo</label>
                   <input
                     id="nombre"
                     type="text"
                     name="nombre"
+                    autocomplete="name"
                     required
                     minlength="3"
                     pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
@@ -379,7 +223,13 @@
                 </div>
                 <div class="field">
                   <label for="email">Correo electrónico</label>
-                  <input id="email" type="email" name="email" required />
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                  />
                 </div>
                 <div class="field">
                   <label for="telefono">Teléfono</label>
@@ -387,86 +237,281 @@
                     id="telefono"
                     type="tel"
                     name="telefono"
+                    autocomplete="tel"
                     required
                     minlength="7"
                     pattern="[0-9+\(\) \-]{7,}"
                   />
                 </div>
-              </div>
-            </fieldset>
-            <button type="submit">Enviar mensaje</button>
-            <p
-              id="form-status"
-              class="form-status"
-              role="status"
-              aria-live="polite"
-            ></p>
-          </form>
-          <div id="saved-orders" class="saved-orders"></div>
-          <div class="faq" id="faq">
-            <p class="eyebrow">Resolvemos tus dudas</p>
-            <h3>Preguntas frecuentes</h3>
-            <details>
-              <summary>¿Cuánto tarda el envío?</summary>
-              <p>
-                Los pedidos llegan entre 2 y 4 días hábiles dentro de Colombia.
-              </p>
-            </details>
-            <details>
-              <summary>¿El café llega molido?</summary>
-              <p>
-                Puedes solicitarlo molido para tu método de preparación en las
-                instrucciones de envío.
-              </p>
-            </details>
-            <details>
-              <summary>¿Cómo conservo el café?</summary>
-              <p>
-                Guárdalo cerrado, en un lugar fresco y sin exposición directa al
-                sol.
-              </p>
-            </details>
+                <div>
+                  <button class="btn btn-primary" type="submit">
+                    Enviar mensaje
+                  </button>
+                </div>
+                <p
+                  id="form-status"
+                  class="form-status"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+              </form>
+              <div id="saved-orders" class="saved-orders"></div>
+            </div>
+            <div class="faq" id="faq">
+              <p class="eyebrow">Resolvemos tus dudas</p>
+              <h3>Preguntas frecuentes</h3>
+              <details>
+                <summary>¿Cuánto tarda el envío?</summary>
+                <p>
+                  Los pedidos llegan entre 2 y 4 días hábiles dentro de
+                  Colombia.
+                </p>
+              </details>
+              <details>
+                <summary>¿El café llega molido?</summary>
+                <p>
+                  Puedes solicitarlo molido para tu método de preparación en las
+                  instrucciones de envío.
+                </p>
+              </details>
+              <details>
+                <summary>¿Cómo conservo el café?</summary>
+                <p>
+                  Guárdalo cerrado, en un lugar fresco y sin exposición directa
+                  al sol.
+                </p>
+              </details>
+            </div>
           </div>
         </section>
+      </div>
 
-        <section id="quanty">
-          <div class="section-heading">
-            <p class="eyebrow">Integración con Quanty</p>
-            <h2>Sincronizar con Quanty</h2>
+      <div id="view-panel" hidden>
+        <section class="wrap" aria-labelledby="panel-title">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Administración</p>
+              <h1 id="panel-title">Panel de inventario</h1>
+            </div>
+            <div class="actions">
+              <button
+                id="restore-products"
+                class="btn btn-secondary confirm-cancel"
+                type="button"
+              >
+                Restaurar ejemplos
+              </button>
+              <button id="new-product" class="btn btn-primary" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" /></svg
+                >Nuevo producto
+              </button>
+            </div>
           </div>
-          <form id="quanty-form" class="record-form" novalidate>
-            <h3>Clave de integración</h3>
-            <div class="form-grid">
-              <div class="field full-width">
-                <label for="quanty-key">Clave de API de Quanty</label>
+
+          <div class="kpis">
+            <div class="kpi">
+              <span>Productos</span>
+              <strong id="summary-total">0</strong>
+              <small>registrados</small>
+            </div>
+            <div class="kpi">
+              <span>Unidades</span>
+              <strong id="summary-quantity">0</strong>
+              <small>valor <span id="summary-value">$ 0</span></small>
+            </div>
+            <div class="kpi">
+              <span>Stock bajo</span>
+              <strong id="summary-low">0</strong>
+              <small>con 5 bolsas o menos</small>
+            </div>
+            <div class="kpi">
+              <span>Agotados</span>
+              <strong id="summary-empty">0</strong>
+              <small>sin existencias</small>
+            </div>
+          </div>
+
+          <div class="panel-block" id="tabla">
+            <h2>Productos</h2>
+            <div class="data-table__tools">
+              <div class="field">
+                <label for="table-search">Buscar en la tabla</label>
                 <input
-                  id="quanty-key"
-                  name="clave"
-                  type="password"
-                  autocomplete="off"
-                  placeholder="qk_..."
-                  required
+                  id="table-search"
+                  type="search"
+                  placeholder="Nombre o categoría..."
                 />
               </div>
+              <div class="field">
+                <label for="table-category">Categoría</label>
+                <select id="table-category"></select>
+              </div>
+              <div class="field">
+                <label for="table-stock">Disponibilidad</label>
+                <select id="table-stock">
+                  <option value="todos">Todos</option>
+                  <option value="disponibles">Disponibles</option>
+                  <option value="bajo">Stock bajo</option>
+                  <option value="agotados">Agotados</option>
+                </select>
+              </div>
             </div>
-            <button id="quanty-test" type="button">Probar clave</button>
-            <button id="quanty-send" type="submit">
-              Enviar productos y contactos
-            </button>
-            <button id="quanty-forget" class="confirm-cancel" type="button">
-              Olvidar clave
-            </button>
+            <p id="table-count" class="result-count" aria-live="polite"></p>
+            <div class="table-wrap">
+              <table id="data-table">
+                <caption class="sr">
+                  Inventario de Bruma Café
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col" data-column="nombre" aria-sort="ascending">
+                      <button
+                        class="data-table__sort"
+                        type="button"
+                        data-column="nombre"
+                      >
+                        Producto
+                      </button>
+                    </th>
+                    <th scope="col" data-column="categoria" aria-sort="none">
+                      <button
+                        class="data-table__sort"
+                        type="button"
+                        data-column="categoria"
+                      >
+                        Categoría
+                      </button>
+                    </th>
+                    <th
+                      class="num"
+                      scope="col"
+                      data-column="precio"
+                      aria-sort="none"
+                    >
+                      <button
+                        class="data-table__sort"
+                        type="button"
+                        data-column="precio"
+                      >
+                        Precio
+                      </button>
+                    </th>
+                    <th
+                      class="num"
+                      scope="col"
+                      data-column="cantidad"
+                      aria-sort="none"
+                    >
+                      <button
+                        class="data-table__sort"
+                        type="button"
+                        data-column="cantidad"
+                      >
+                        Stock
+                      </button>
+                    </th>
+                    <th class="num" scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+              </table>
+              <div id="table-empty" class="empty" hidden>
+                <strong>Sin resultados</strong>
+                <span>Ningún producto coincide con los filtros.</span>
+              </div>
+            </div>
+            <div class="pager">
+              <button
+                id="table-prev"
+                class="btn btn-secondary btn-sm"
+                type="button"
+              >
+                Anterior
+              </button>
+              <span id="table-page" aria-live="polite"></span>
+              <button
+                id="table-next"
+                class="btn btn-secondary btn-sm"
+                type="button"
+              >
+                Siguiente
+              </button>
+              <span class="spacer"></span>
+              <button
+                id="table-export"
+                class="btn btn-secondary btn-sm"
+                type="button"
+              >
+                Exportar a CSV
+              </button>
+            </div>
             <p
-              id="quanty-status"
+              id="table-status"
               class="form-status"
               role="status"
               aria-live="polite"
             ></p>
-          </form>
-          <div id="quanty-result" class="saved-orders" aria-live="polite"></div>
+          </div>
+
+          <div class="panel-block" id="quanty">
+            <h2>Integración con Quanty</h2>
+            <div class="quanty">
+              <form id="quanty-form" class="box" novalidate>
+                <h3>Clave de integración</h3>
+                <p>Quanty recibe el catálogo y los contactos de Bruma Café.</p>
+                <div class="field">
+                  <label for="quanty-key">Clave de API de Quanty</label>
+                  <input
+                    id="quanty-key"
+                    name="clave"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="qk_..."
+                    required
+                  />
+                  <p class="hint">La clave se guarda solo en este navegador.</p>
+                </div>
+                <div class="btn-row">
+                  <button
+                    id="quanty-test"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Probar clave
+                  </button>
+                  <button
+                    id="quanty-send"
+                    class="btn btn-primary"
+                    type="submit"
+                  >
+                    Enviar productos y contactos
+                  </button>
+                  <button
+                    id="quanty-forget"
+                    class="btn btn-danger"
+                    type="button"
+                  >
+                    Olvidar clave
+                  </button>
+                </div>
+                <p
+                  id="quanty-status"
+                  class="form-status"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+              </form>
+            </div>
+            <div
+              id="quanty-result"
+              class="saved-orders"
+              aria-live="polite"
+            ></div>
+          </div>
         </section>
-      </main>
-    </div>
+      </div>
+    </main>
 
     <footer>
       <div class="brand footer-brand">
@@ -484,6 +529,89 @@
       </nav>
       <small>&copy; 2026 Bruma Café. Todos los derechos reservados.</small>
     </footer>
+
+    <dialog
+      id="product-dialog"
+      class="product-dialog"
+      aria-labelledby="record-form-title"
+    >
+      <form id="record-form" class="dlg" novalidate>
+        <h3 id="record-form-title">Nuevo producto</h3>
+        <div class="dlg-grid">
+          <div class="field full">
+            <label for="product-name">Nombre del producto</label>
+            <input id="product-name" name="nombre" required minlength="3" />
+          </div>
+          <div class="field">
+            <label for="product-price">Precio (COP)</label>
+            <input
+              id="product-price"
+              name="precio"
+              type="number"
+              min="1"
+              max="1000000"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="product-quantity">Cantidad (bolsas)</label>
+            <input
+              id="product-quantity"
+              name="cantidad"
+              type="number"
+              min="0"
+              step="1"
+              required
+            />
+          </div>
+          <div class="field full">
+            <label for="product-category">Categoría</label>
+            <select id="product-category" name="categoria" required>
+              <option value="">Selecciona categoría</option>
+              <option>Grano</option>
+              <option>Molido</option>
+              <option>Accesorios</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="product-image">URL de imagen</label>
+            <input
+              id="product-image"
+              name="imagen"
+              type="url"
+              placeholder="https://... o assets/archivo.jpg"
+              required
+            />
+          </div>
+          <div class="full preview">
+            <span id="preview-thumb" class="thumb"></span>
+            <div>
+              <strong id="preview-name">Nombre del producto</strong><br />
+              <small id="preview-meta">Sin categoría · Sin precio</small>
+            </div>
+          </div>
+        </div>
+        <p
+          id="record-status"
+          class="form-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div class="dlg-actions">
+          <button
+            id="cancel-edit"
+            class="btn btn-secondary confirm-cancel"
+            type="button"
+          >
+            Cancelar
+          </button>
+          <button id="save-product" class="btn btn-primary" type="submit">
+            Agregar al inventario
+          </button>
+        </div>
+      </form>
+    </dialog>
+
     <dialog
       id="confirm-dialog"
       class="confirm-dialog"
@@ -494,13 +622,25 @@
         <h3 id="confirm-title"></h3>
         <p id="confirm-message"></p>
         <div class="confirm-actions">
-          <button type="submit" value="cancel" class="confirm-cancel">
+          <button
+            type="submit"
+            value="cancel"
+            class="btn btn-secondary confirm-cancel"
+          >
             Cancelar
           </button>
-          <button type="submit" value="accept" id="confirm-accept"></button>
+          <button
+            type="submit"
+            value="accept"
+            id="confirm-accept"
+            class="btn btn-primary"
+          ></button>
         </div>
       </form>
     </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
     <script src="js/modelo/modelo.js"></script>
     <script src="js/modelo/reglasTabla.js"></script>
     <script src="js/servicios/api.js"></script>
