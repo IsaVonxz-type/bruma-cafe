@@ -2,6 +2,7 @@
 
 const Modelo = (() => {
   const productosKey = "bruma-cafe-productos";
+  const siguienteIdKey = "bruma-cafe-siguiente-id";
   const pedidosKey = "bruma-cafe-pedidos";
   const temaKey = "bruma-theme";
   const claveQuantyKey = "bruma-cafe-quanty-clave";
@@ -58,6 +59,7 @@ const Modelo = (() => {
     },
   ];
   let productos = [];
+  let siguienteId = 1;
 
   function persistir() {
     try {
@@ -66,6 +68,28 @@ const Modelo = (() => {
     } catch {
       return false;
     }
+  }
+
+  function guardarSiguienteId() {
+    try {
+      localStorage.setItem(siguienteIdKey, String(siguienteId));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function leerSiguienteIdGuardado() {
+    const guardado = Number(localStorage.getItem(siguienteIdKey));
+    return Number.isInteger(guardado) && guardado > 0 ? guardado : 1;
+  }
+
+  function calcularSiguienteId() {
+    const mayor = productos.reduce(
+      (maximo, producto) => Math.max(maximo, producto.id),
+      0,
+    );
+    return Math.max(leerSiguienteIdGuardado(), mayor + 1);
   }
 
   function leerPedidos() {
@@ -94,6 +118,8 @@ const Modelo = (() => {
         productos = structuredClone(ejemplos);
       }
       if (localStorage.getItem(productosKey) === null) persistir();
+      siguienteId = calcularSiguienteId();
+      guardarSiguienteId();
     },
     validar(datos, idEditando = null) {
       const errores = [];
@@ -131,12 +157,12 @@ const Modelo = (() => {
       return errores;
     },
     agregar(datos) {
-      const id =
-        productos.reduce((mayor, producto) => Math.max(mayor, producto.id), 0) +
-        1;
+      const id = siguienteId;
       productos.unshift({ ...datos, id, nombre: datos.nombre.trim() });
-      if (persistir()) return true;
+      siguienteId += 1;
+      if (persistir() && guardarSiguienteId()) return true;
       productos.shift();
+      siguienteId = id;
       return false;
     },
     buscarPorId(id) {
