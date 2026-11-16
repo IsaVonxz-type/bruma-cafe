@@ -7,7 +7,17 @@
 
 # Bruma Café
 
-Landing page de una tienda de café de especialidad. Proyecto académico construido con HTML, CSS y JavaScript para presentar una marca, su catálogo y contenido informativo en una sola página, además de registrar pedidos en el navegador.
+Aplicación web de una tienda de café de especialidad. Proyecto académico construido con HTML, CSS y JavaScript, sin frameworks. Tiene una tienda pública con el catálogo, un formulario de contacto que guarda pedidos en el navegador y un panel de inventario con CRUD, tabla de datos y sincronización con la aplicación Quanty.
+
+## Vistas de la aplicación
+
+Todo vive en `index.html` y se alterna por la ruta del navegador (`#tienda`, `#contacto` y `#panel`), sin recargar la página.
+
+| Ruta | Vista | Qué contiene |
+| --- | --- | --- |
+| `#tienda` | Tienda | Portada, catálogo con buscador y filtros por categoría, destacados calculados del inventario y datos de confianza |
+| `#contacto` | Contacto | Formulario de pedido, pedidos guardados y preguntas frecuentes |
+| `#panel` | Panel de inventario | Indicadores, CRUD de productos, tabla de datos con exportación a CSV e integración con Quanty |
 
 ## Inicio rápido
 
@@ -42,11 +52,11 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
     └── *.jpg
 ```
 
-- `index.html`: contenido, estructura semántica, navegación, catálogo, tabla de datos, formularios y preguntas frecuentes.
-- `css/styles.css`: estilos, distribución con Grid y Flexbox, estados de foco y adaptación responsive.
+- `index.html`: estructura semántica con las tres vistas (tienda, contacto y panel), formularios, tabla de datos y cuadros de diálogo.
+- `css/styles.css`: estilos, distribución con Grid y Flexbox, tema claro y oscuro, estados de foco y adaptación responsive.
 - `js/modelo/modelo.js`: productos, reglas de negocio, operaciones CRUD, persistencia (`localStorage`), preferencia de tema y armado del envío a Quanty. No toca el DOM.
 - `js/modelo/reglasTabla.js`: reglas de la tabla: filtros combinados, ordenamiento, paginación y generación del CSV. No toca el DOM.
-- `js/vista/vista.js`: lectura de formularios, tarjetas, filtros, resúmenes y mensajes mediante APIs seguras del DOM. No guarda datos.
+- `js/vista/vista.js`: cambio de vista por ruta, lectura de formularios, tarjetas, filtros, indicadores, vista previa del producto, destacados y mensajes mediante APIs seguras del DOM. No guarda datos.
 - `js/vista/pintarTabla.js`: pintado de la tabla, indicadores de orden y paginación, y descarga del CSV.
 - `js/controlador/controlador.js`: eventos, coordinación de las capas y sincronización con Quanty.
 - `js/controlador/eventosTabla.js`: estado de la tabla (columna, dirección y página) y sus eventos.
@@ -58,21 +68,19 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 
 ## Contenido y funcionalidades
 
-- Cabecera con un solo `h1`, menú superior y menú lateral por anclas. En móvil la barra lateral pasa arriba del contenido.
-- Inventario de productos con CRUD completo: crear, listar, editar y eliminar desde un formulario reutilizable.
+- Cabecera con un solo menú de navegación por vistas, enlace para saltar al contenido y un único `h1` por vista.
+- Inventario de productos con CRUD completo: crear, listar, editar y eliminar. El formulario se abre en un cuadro de diálogo (`<dialog>`) con vista previa del producto.
 - Persistencia del inventario con `localStorage`; los productos sobreviven a recargar la página.
-- Validaciones de negocio centralizadas en el modelo: nombre mínimo, precio positivo, cantidad entera no negativa, categoría válida, nombre único, imagen HTTP/HTTPS y máximo 50 bolsas de grano.
-- Botón para restaurar los seis productos de ejemplo con confirmación.
-- Buscador en vivo, sin distinguir mayúsculas, con contador y aviso sin coincidencias.
-- Filtros por categoría creados desde JavaScript y combinados con el buscador.
-- Eliminar productos con delegación de eventos. Agregar y eliminar abren un cuadro de confirmación estilizado (`<dialog>`) con el nombre del producto antes de aplicar el cambio.
-- Resumen lateral (registros, agotados, unidades y valor total del inventario) con `filter` y `reduce`, y tabla de resumen, ambos actualizados en cada cambio.
-- Estados visuales con `classList`: `is-empty`, `is-selected`, `has-error`.
+- Validaciones de negocio centralizadas en el modelo: nombre mínimo, precio positivo y máximo de $1.000.000, cantidad entera no negativa, categoría válida, nombre único, imagen HTTP/HTTPS y máximo 50 bolsas de grano.
+- Agregar, guardar cambios y eliminar piden confirmación con el nombre del producto antes de aplicarse. Los eventos de las filas usan delegación.
+- Botón para restaurar los seis productos de ejemplo, con confirmación.
+- Indicadores del panel (productos, unidades y valor, stock bajo y agotados) calculados con `filter` y `reduce`. El stock bajo son 5 bolsas o menos.
+- Catálogo de la tienda con buscador en vivo, sin distinguir mayúsculas, filtros por categoría combinados con la búsqueda, contador de resultados y aviso sin coincidencias.
+- Destacados de la tienda calculados a partir del inventario actual.
+- Tabla de inventario con búsqueda, filtros combinados (categoría y disponibilidad: disponibles, stock bajo y agotados), ordenamiento por columna, paginación de 5 filas y exportación a CSV de los registros filtrados.
 - Formulario de contacto con validación del navegador; al enviar muestra un mensaje con el nombre, limpia el formulario y guarda el pedido en `localStorage`, desde donde puede eliminarse.
-- Tema claro y oscuro con preferencia guardada.
-- Preguntas frecuentes expandibles y diseño responsive.
-- Tabla de inventario con búsqueda, filtros combinados (categoría y disponibilidad), ordenamiento por columna, paginación de 5 filas y exportación a CSV de los registros filtrados.
 - Sincronización con Quanty: envío de productos y contactos a la API REST de Quanty, con indicador de carga, resultado en pantalla y mensajes de error claros.
+- Tema claro y oscuro con preferencia guardada, y diseño responsive probado en pantalla de móvil y de escritorio.
 
 ## API consumida: Quanty
 
@@ -86,7 +94,7 @@ Quanty es la aplicación de administración de almacenamiento y presupuestos del
 | Encabezados | `x-api-key: qk_...` y `Content-Type: application/json` |
 | Límites | Cuerpo de máximo 1 MB y 500 elementos por lista |
 
-La clave la genera el usuario en Quanty (Configuración, Integraciones) y se pega en la sección "Sincronizar con Quanty". Se guarda solo en el `localStorage` del navegador y nunca se sube al repositorio.
+La clave la genera el usuario en Quanty (Configuración, Integraciones) y se pega en el bloque "Integración con Quanty" del panel de inventario (`#panel`). Se guarda solo en el `localStorage` del navegador y nunca se sube al repositorio.
 
 Parámetros del cuerpo del `POST`:
 
@@ -146,7 +154,7 @@ La aplicación está publicada en Vercel: <https://bruma-cafe-eight.vercel.app>
 ## Normas de codificación
 
 - Nombres de variables, funciones y archivos en `camelCase`; los módulos en `PascalCase`.
-- Clases CSS con la convención BEM (`bloque__elemento--modificador`), por ejemplo `data-table__sort`.
+- Clases CSS con la convención BEM (`bloque__elemento--modificador`). Ejemplos: bloque `card`, elemento `card__title`, modificador `card--out`, botones `btn btn--primary` y `data-table__sort`. Los estados que activa JavaScript también son modificadores, como `form-status--error` o `toast--visible`.
 - Sangría de 2 espacios y comillas dobles.
 - Los comentarios, cuando se usan, van en español.
 - Sin código muerto ni `console.log` de prueba.
