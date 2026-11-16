@@ -18,12 +18,12 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
     <header class="topbar">
       <a class="brand" href="#tienda">
         <img
-          class="brand-mark"
+          class="brand__mark"
           src="assets/logo.svg"
           width="38"
           height="38"
@@ -32,9 +32,9 @@
         <span>Bruma Café</span>
       </a>
       <nav class="nav" aria-label="Navegación principal">
-        <a href="#tienda" data-route="tienda">Tienda</a>
-        <a href="#contacto" data-route="contacto">Contacto</a>
-        <a href="#panel" data-route="panel">Panel de inventario</a>
+        <a class="nav__link" href="#tienda" data-route="tienda">Tienda</a>
+        <a class="nav__link" href="#contacto" data-route="contacto">Contacto</a>
+        <a class="nav__link" href="#panel" data-route="panel">Panel de inventario</a>
         <button
           class="icon-btn theme-toggle"
           type="button"
@@ -42,7 +42,7 @@
           aria-pressed="false"
         >
           <svg
-            class="theme-icon theme-icon--sun"
+            class="theme-toggle__icon theme-toggle__icon--sun"
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
@@ -52,7 +52,7 @@
             />
           </svg>
           <svg
-            class="theme-icon theme-icon--moon"
+            class="theme-toggle__icon theme-toggle__icon--moon"
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
@@ -67,18 +67,18 @@
         <section class="wrap hero" id="home" aria-labelledby="hero-title">
           <div>
             <p class="eyebrow">Cosecha 2026 · Huila, Colombia</p>
-            <h1 id="hero-title">Café honesto.<br />Sabor inolvidable.</h1>
-            <p class="lead">
+            <h1 id="hero-title" class="hero__title">Café honesto.<br />Sabor inolvidable.</h1>
+            <p class="hero__lead">
               Granos de origen tostados en pequeños lotes para convertir cada
               mañana en un ritual.
             </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="#catalogo"
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#catalogo"
                 >Descubrir la cosecha</a
               >
-              <a class="btn btn-secondary" href="#contacto">Hacer un pedido</a>
+              <a class="btn btn--secondary" href="#contacto">Hacer un pedido</a>
             </div>
-            <dl class="hero-facts">
+            <dl class="hero__facts">
               <div>
                 <dt>Origen</dt>
                 <dd>Huila</dd>
@@ -97,7 +97,7 @@
               </div>
             </dl>
           </div>
-          <figure class="hero-card">
+          <figure class="hero__card">
             <svg
               viewBox="0 0 400 500"
               preserveAspectRatio="xMidYMid slice"
@@ -144,7 +144,7 @@
                 <circle cx="11" cy="11" r="7" />
                 <path d="m20 20-3.5-3.5" />
               </svg>
-              <label class="sr" for="product-search">Buscar productos</label>
+              <label class="visually-hidden" for="product-search">Buscar productos</label>
               <input
                 id="product-search"
                 type="search"
@@ -159,14 +159,14 @@
             ></div>
           </div>
           <p id="result-count" class="result-count" aria-live="polite"></p>
-          <div id="product-list" class="grid"></div>
+          <div id="product-list" class="product-grid"></div>
           <div id="empty-results" class="empty" hidden>
             <strong>No encontramos ese café</strong>
             <span>Prueba con otro nombre o quita el filtro.</span>
           </div>
         </section>
 
-        <section class="wrap dark-band" aria-labelledby="destacados-title">
+        <section class="wrap wrap--dark" aria-labelledby="destacados-title">
           <div class="sec-head">
             <p class="eyebrow">Los más disponibles</p>
             <h2 id="destacados-title">Destacados de la semana</h2>
@@ -199,7 +199,7 @@
 
       <div id="view-contacto" hidden>
         <section class="wrap contact" aria-labelledby="contacto-title">
-          <div class="contact-grid">
+          <div class="contact__grid">
             <div>
               <div class="sec-head">
                 <p class="eyebrow">Tu próximo pedido</p>
@@ -244,7 +244,7 @@
                   />
                 </div>
                 <div>
-                  <button class="btn btn-primary" type="submit">
+                  <button class="btn btn--primary" type="submit">
                     Enviar mensaje
                   </button>
                 </div>
@@ -293,15 +293,15 @@
               <p class="eyebrow">Administración</p>
               <h1 id="panel-title">Panel de inventario</h1>
             </div>
-            <div class="actions">
+            <div class="panel-head__actions">
               <button
                 id="restore-products"
-                class="btn btn-secondary confirm-cancel"
+                class="btn btn--secondary"
                 type="button"
               >
                 Restaurar ejemplos
               </button>
-              <button id="new-product" class="btn btn-primary" type="button">
+              <button id="new-product" class="btn btn--primary" type="button">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 5v14M5 12h14" /></svg
                 >Nuevo producto
@@ -310,22 +310,22 @@
           </div>
 
           <div class="kpis">
-            <div class="kpi">
+            <div class="kpis__item">
               <span>Productos</span>
               <strong id="summary-total">0</strong>
               <small>registrados</small>
             </div>
-            <div class="kpi">
+            <div class="kpis__item">
               <span>Unidades</span>
               <strong id="summary-quantity">0</strong>
               <small>valor <span id="summary-value">$ 0</span></small>
             </div>
-            <div class="kpi">
+            <div class="kpis__item">
               <span>Stock bajo</span>
               <strong id="summary-low">0</strong>
               <small>con 5 bolsas o menos</small>
             </div>
-            <div class="kpi">
+            <div class="kpis__item">
               <span>Agotados</span>
               <strong id="summary-empty">0</strong>
               <small>sin existencias</small>
@@ -358,9 +358,9 @@
               </div>
             </div>
             <p id="table-count" class="result-count" aria-live="polite"></p>
-            <div class="table-wrap">
+            <div class="data-table__wrap">
               <table id="data-table">
-                <caption class="sr">
+                <caption class="visually-hidden">
                   Inventario de Bruma Café
                 </caption>
                 <thead>
@@ -384,7 +384,7 @@
                       </button>
                     </th>
                     <th
-                      class="num"
+                      class="data-table__num"
                       scope="col"
                       data-column="precio"
                       aria-sort="none"
@@ -398,7 +398,7 @@
                       </button>
                     </th>
                     <th
-                      class="num"
+                      class="data-table__num"
                       scope="col"
                       data-column="cantidad"
                       aria-sort="none"
@@ -411,7 +411,7 @@
                         Stock
                       </button>
                     </th>
-                    <th class="num" scope="col">Acciones</th>
+                    <th class="data-table__num" scope="col">Acciones</th>
                   </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -421,10 +421,10 @@
                 <span>Ningún producto coincide con los filtros.</span>
               </div>
             </div>
-            <div class="pager">
+            <div class="data-table__pager">
               <button
                 id="table-prev"
-                class="btn btn-secondary btn-sm"
+                class="btn btn--secondary btn--sm"
                 type="button"
               >
                 Anterior
@@ -432,15 +432,15 @@
               <span id="table-page" aria-live="polite"></span>
               <button
                 id="table-next"
-                class="btn btn-secondary btn-sm"
+                class="btn btn--secondary btn--sm"
                 type="button"
               >
                 Siguiente
               </button>
-              <span class="spacer"></span>
+              <span class="data-table__spacer"></span>
               <button
                 id="table-export"
-                class="btn btn-secondary btn-sm"
+                class="btn btn--secondary btn--sm"
                 type="button"
               >
                 Exportar a CSV
@@ -457,7 +457,7 @@
           <div class="panel-block" id="quanty">
             <h2>Integración con Quanty</h2>
             <div class="quanty">
-              <form id="quanty-form" class="box" novalidate>
+              <form id="quanty-form" class="quanty__box" novalidate>
                 <h3>Clave de integración</h3>
                 <p>Quanty recibe el catálogo y los contactos de Bruma Café.</p>
                 <div class="field">
@@ -470,26 +470,26 @@
                     placeholder="qk_..."
                     required
                   />
-                  <p class="hint">La clave se guarda solo en este navegador.</p>
+                  <p class="field__hint">La clave se guarda solo en este navegador.</p>
                 </div>
-                <div class="btn-row">
+                <div class="quanty__actions">
                   <button
                     id="quanty-test"
-                    class="btn btn-secondary"
+                    class="btn btn--secondary"
                     type="button"
                   >
                     Probar clave
                   </button>
                   <button
                     id="quanty-send"
-                    class="btn btn-primary"
+                    class="btn btn--primary"
                     type="submit"
                   >
                     Enviar productos y contactos
                   </button>
                   <button
                     id="quanty-forget"
-                    class="btn btn-danger"
+                    class="btn btn--danger"
                     type="button"
                   >
                     Olvidar clave
@@ -514,9 +514,9 @@
     </main>
 
     <footer>
-      <div class="brand footer-brand">
+      <div class="brand">
         <img
-          class="brand-mark"
+          class="brand__mark"
           src="assets/logo.svg"
           width="38"
           height="38"
@@ -532,13 +532,13 @@
 
     <dialog
       id="product-dialog"
-      class="product-dialog"
+      
       aria-labelledby="record-form-title"
     >
-      <form id="record-form" class="dlg" novalidate>
+      <form id="record-form" class="dialog-form" novalidate>
         <h3 id="record-form-title">Nuevo producto</h3>
-        <div class="dlg-grid">
-          <div class="field full">
+        <div class="dialog-form__grid">
+          <div class="field dialog-form__full">
             <label for="product-name">Nombre del producto</label>
             <input id="product-name" name="nombre" required minlength="3" />
           </div>
@@ -564,7 +564,7 @@
               required
             />
           </div>
-          <div class="field full">
+          <div class="field dialog-form__full">
             <label for="product-category">Categoría</label>
             <select id="product-category" name="categoria" required>
               <option value="">Selecciona categoría</option>
@@ -573,7 +573,7 @@
               <option>Accesorios</option>
             </select>
           </div>
-          <div class="field full">
+          <div class="field dialog-form__full">
             <label for="product-image">URL de imagen</label>
             <input
               id="product-image"
@@ -583,8 +583,8 @@
               required
             />
           </div>
-          <div class="full preview">
-            <span id="preview-thumb" class="thumb"></span>
+          <div class="dialog-form__full preview">
+            <span id="preview-thumb" class="thumb thumb--large"></span>
             <div>
               <strong id="preview-name">Nombre del producto</strong><br />
               <small id="preview-meta">Sin categoría · Sin precio</small>
@@ -597,15 +597,15 @@
           role="status"
           aria-live="polite"
         ></p>
-        <div class="dlg-actions">
+        <div class="dialog-form__actions">
           <button
             id="cancel-edit"
-            class="btn btn-secondary confirm-cancel"
+            class="btn btn--secondary"
             type="button"
           >
             Cancelar
           </button>
-          <button id="save-product" class="btn btn-primary" type="submit">
+          <button id="save-product" class="btn btn--primary" type="submit">
             Agregar al inventario
           </button>
         </div>
@@ -621,11 +621,11 @@
       <form method="dialog">
         <h3 id="confirm-title"></h3>
         <p id="confirm-message"></p>
-        <div class="confirm-actions">
+        <div class="confirm-dialog__actions">
           <button
             type="submit"
             value="cancel"
-            class="btn btn-secondary confirm-cancel"
+            class="btn btn--secondary"
           >
             Cancelar
           </button>
@@ -633,7 +633,7 @@
             type="submit"
             value="accept"
             id="confirm-accept"
-            class="btn btn-primary"
+            class="btn btn--primary confirm-dialog__accept"
           ></button>
         </div>
       </form>

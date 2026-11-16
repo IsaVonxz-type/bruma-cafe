@@ -34,9 +34,9 @@ const Vista = (() => {
   function mostrarAviso(mensaje) {
     clearTimeout(temporizadorAviso);
     aviso.textContent = mensaje;
-    aviso.classList.add("is-visible");
+    aviso.classList.add("toast--visible");
     temporizadorAviso = setTimeout(
-      () => aviso.classList.remove("is-visible"),
+      () => aviso.classList.remove("toast--visible"),
       3200,
     );
   }
@@ -57,7 +57,7 @@ const Vista = (() => {
       secciones.forEach((seccion) => {
         document.querySelector(`#view-${seccion}`).hidden = seccion !== activa;
       });
-      document.querySelectorAll(".nav a[data-route]").forEach((enlace) => {
+      document.querySelectorAll(".nav__link[data-route]").forEach((enlace) => {
         if (enlace.dataset.route === activa)
           enlace.setAttribute("aria-current", "page");
         else enlace.removeAttribute("aria-current");
@@ -65,7 +65,7 @@ const Vista = (() => {
     },
     crearEtiquetaStock(producto) {
       const estado = Modelo.estadoStock(producto);
-      return crearElemento("span", `pill ${estado}`, etiquetasStock[estado]);
+      return crearElemento("span", `pill pill--${estado}`, etiquetasStock[estado]);
     },
     crearMiniatura(producto, clase) {
       const imagen = crearElemento("img", clase);
@@ -132,7 +132,7 @@ const Vista = (() => {
       }
       const status = document.querySelector("#record-status");
       status.textContent = mensaje;
-      status.classList.toggle("has-error", tipo === "error");
+      status.classList.toggle("form-status--error", tipo === "error");
       status.dataset.type = tipo;
     },
     pintarProductos(productos, busqueda, categoria) {
@@ -150,18 +150,18 @@ const Vista = (() => {
         const agotado = Modelo.estadoStock(producto) === "agotado";
         const tarjeta = crearElemento(
           "article",
-          `card${agotado ? " is-out" : ""}`,
+          `card${agotado ? " card--out" : ""}`,
         );
         tarjeta.dataset.id = producto.id;
-        const arte = crearElemento("div", "card-art");
+        const arte = crearElemento("div", "card__art");
         arte.append(
           this.crearMiniatura(producto),
           this.crearEtiquetaStock(producto),
         );
-        const cuerpo = crearElemento("div", "card-body");
+        const cuerpo = crearElemento("div", "card__body");
         const precio = crearElemento(
           "div",
-          "price",
+          "card__price",
           formatoPrecio.format(producto.precio),
         );
         precio.append(
@@ -173,15 +173,15 @@ const Vista = (() => {
         );
         const pedir = crearElemento(
           "a",
-          `btn btn-sm ${agotado ? "btn-secondary" : "btn-primary"}`,
+          `btn btn--sm ${agotado ? "btn--secondary" : "btn--primary"}`,
           agotado ? "Avísame" : "Pedir",
         );
         pedir.href = "#contacto";
-        const meta = crearElemento("div", "card-meta");
+        const meta = crearElemento("div", "card__meta");
         meta.append(precio, pedir);
         cuerpo.append(
-          crearElemento("span", "card-cat", producto.categoria),
-          crearElemento("h3", "", producto.nombre),
+          crearElemento("span", "card__category", producto.categoria),
+          crearElemento("h3", "card__title", producto.nombre),
           meta,
         );
         tarjeta.append(arte, cuerpo);
@@ -204,7 +204,7 @@ const Vista = (() => {
             ? productos.length
             : productos.filter((producto) => producto.categoria === categoria)
                 .length;
-        const boton = crearElemento("button", "chip", categoria);
+        const boton = crearElemento("button", "chips__item", categoria);
         boton.type = "button";
         boton.dataset.category = categoria;
         boton.setAttribute("aria-pressed", String(categoria === categoriaActiva));
@@ -251,12 +251,12 @@ const Vista = (() => {
         formatoPrecio.format(modelo.valorInventario());
       document
         .querySelector("#summary-empty")
-        .closest(".kpi")
-        .classList.toggle("warn", agotados > 0);
+        .closest(".kpis__item")
+        .classList.toggle("kpis__item--warn", agotados > 0);
       document
         .querySelector("#summary-low")
-        .closest(".kpi")
-        .classList.toggle("warn", bajos > 0);
+        .closest(".kpis__item")
+        .classList.toggle("kpis__item--warn", bajos > 0);
     },
     leerContacto(formulario) {
       return {
@@ -269,7 +269,7 @@ const Vista = (() => {
       const estado = document.querySelector("#form-status");
       clearTimeout(temporizadorContacto);
       estado.textContent = mensaje;
-      estado.classList.toggle("has-error", error);
+      estado.classList.toggle("form-status--error", error);
       if (mensaje)
         temporizadorContacto = setTimeout(() => {
           estado.textContent = "";
@@ -296,7 +296,7 @@ const Vista = (() => {
       dialogo.querySelector("#confirm-message").textContent = mensaje;
       const aceptar = dialogo.querySelector("#confirm-accept");
       aceptar.textContent = accion;
-      aceptar.classList.toggle("is-danger", peligro);
+      aceptar.classList.toggle("confirm-dialog__accept--danger", peligro);
       dialogo.returnValue = "cancel";
       dialogo.showModal();
       return new Promise((resolve) => {
@@ -331,7 +331,7 @@ const Vista = (() => {
         telefono.textContent = `Teléfono: ${pedido.telefono}`;
         const eliminar = document.createElement("button");
         eliminar.type = "button";
-        eliminar.className = "btn btn-danger btn-sm remove-order";
+        eliminar.className = "btn btn--danger btn--sm saved-order__remove";
         eliminar.textContent = "Eliminar";
         articulo.append(nombre, datos, telefono, eliminar);
         contenedor.append(articulo);
@@ -346,9 +346,8 @@ const Vista = (() => {
     mostrarEstadoQuanty(mensaje, tipo = "ok") {
       const estado = document.querySelector("#quanty-status");
       estado.textContent = mensaje;
-      estado.classList.toggle("has-error", tipo === "error");
-      estado.classList.toggle("is-loading", tipo === "loading");
-      estado.classList.toggle("is-ok", tipo === "ok" && Boolean(mensaje));
+      estado.classList.toggle("form-status--error", tipo === "error");
+      estado.classList.toggle("form-status--loading", tipo === "loading");
     },
     cargandoQuanty(cargando) {
       const formulario = document.querySelector("#quanty-form");

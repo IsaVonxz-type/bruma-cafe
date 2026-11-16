@@ -189,13 +189,13 @@ const Controlador = (() => {
         const boton = evento.target.closest("button[data-id]");
         if (!boton) return;
         const id = Number(boton.dataset.id);
-        if (boton.classList.contains("edit-product")) {
+        if (boton.classList.contains("data-table__edit")) {
           const producto = Modelo.buscarPorId(id);
           if (producto) {
             idEditando = id;
             Vista.llenarFormulario(producto);
           }
-        } else if (boton.classList.contains("delete-product")) {
+        } else if (boton.classList.contains("data-table__delete")) {
           eliminarProducto(id);
         }
       });
@@ -247,7 +247,7 @@ const Controlador = (() => {
     document
       .querySelector("#saved-orders")
       .addEventListener("click", (evento) => {
-        const boton = evento.target.closest(".remove-order");
+        const boton = evento.target.closest(".saved-order__remove");
         if (!boton) return;
         const articulo = boton.closest(".saved-order");
         articulo.classList.add("saved-order--removing");

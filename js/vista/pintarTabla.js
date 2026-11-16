@@ -33,7 +33,7 @@ const VistaTabla = (() => {
         const fila = document.createElement("tr");
         const celdaProducto = document.createElement("td");
         const contenido = document.createElement("div");
-        contenido.className = "cell-prod";
+        contenido.className = "data-table__product";
         const miniatura = document.createElement("span");
         miniatura.className = "thumb";
         miniatura.append(Vista.crearMiniatura(producto));
@@ -42,22 +42,22 @@ const VistaTabla = (() => {
         const celdaCategoria = document.createElement("td");
         celdaCategoria.textContent = producto.categoria;
         const celdaPrecio = document.createElement("td");
-        celdaPrecio.className = "num";
+        celdaPrecio.className = "data-table__num";
         celdaPrecio.textContent = formatoPrecio.format(producto.precio);
         const celdaStock = document.createElement("td");
-        celdaStock.className = "num";
+        celdaStock.className = "data-table__num";
         const stock = document.createElement("div");
-        stock.className = "stockbar";
+        stock.className = "data-table__stock";
         const cantidad = document.createElement("span");
         cantidad.textContent = String(producto.cantidad);
         stock.append(Vista.crearEtiquetaStock(producto), cantidad);
         celdaStock.append(stock);
         const celdaAcciones = document.createElement("td");
         const acciones = document.createElement("div");
-        acciones.className = "row-actions";
+        acciones.className = "data-table__actions";
         [
-          ["Editar", "btn btn-secondary btn-sm edit-product"],
-          ["Eliminar", "btn btn-danger btn-sm delete-product"],
+          ["Editar", "btn btn--secondary btn--sm data-table__edit"],
+          ["Eliminar", "btn btn--danger btn--sm data-table__delete"],
         ].forEach(([texto, clase]) => {
           const boton = document.createElement("button");
           boton.type = "button";
