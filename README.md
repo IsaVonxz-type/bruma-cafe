@@ -70,7 +70,7 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 
 - Cabecera con un solo menú de navegación por vistas, enlace para saltar al contenido y un único `h1` por vista.
 - Inventario de productos con CRUD completo: crear, listar, editar y eliminar. El formulario se abre en un cuadro de diálogo (`<dialog>`) con vista previa del producto.
-- Persistencia del inventario con `localStorage`; los productos sobreviven a recargar la página.
+- Persistencia del inventario con `localStorage`; los productos sobreviven a recargar la página. El siguiente identificador se guarda aparte (`bruma-cafe-siguiente-id`) y solo sube, así que el id de un producto eliminado nunca se reutiliza. Esto evita que Quanty confunda un producto nuevo con uno antiguo al sincronizar.
 - Validaciones de negocio centralizadas en el modelo: nombre mínimo, precio positivo y máximo de $1.000.000, cantidad entera no negativa, categoría válida, nombre único, imagen HTTP/HTTPS y máximo 50 bolsas de grano.
 - Agregar, guardar cambios y eliminar piden confirmación con el nombre del producto antes de aplicarse. Los eventos de las filas usan delegación.
 - Botón para restaurar los seis productos de ejemplo, con confirmación.
