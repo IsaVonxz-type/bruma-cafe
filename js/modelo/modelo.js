@@ -251,6 +251,45 @@ const Modelo = (() => {
           return;
         }
       },
+      compararStock(productosQuanty) {
+        const filas = productos
+          .map((producto) => {
+            const remoto = productosQuanty.find(
+              (item) => String(item.id) === String(producto.id),
+            );
+            if (!remoto)
+              return {
+                id: producto.id,
+                nombre: producto.nombre,
+                cantidadLocal: producto.cantidad,
+                estado: "ausente",
+              };
+            return {
+              id: producto.id,
+              nombre: producto.nombre,
+              cantidadLocal: producto.cantidad,
+              cantidadQuanty: remoto.cantidad,
+              diferencia: remoto.cantidad - producto.cantidad,
+              umbral: remoto.umbral,
+              actualizado: remoto.actualizado,
+              estado: remoto.cantidad === producto.cantidad ? "igual" : "distinto",
+            };
+          })
+          .sort(
+            (a, b) =>
+              Math.abs(b.diferencia ?? 0) - Math.abs(a.diferencia ?? 0) ||
+              a.nombre.localeCompare(b.nombre, "es"),
+          );
+        const resumen = filas.reduce(
+          (total, fila) => ({ ...total, [fila.estado]: total[fila.estado] + 1 }),
+          { igual: 0, distinto: 0, ausente: 0 },
+        );
+        const idsLocales = new Set(productos.map((producto) => String(producto.id)));
+        resumen.soloEnQuanty = productosQuanty.filter(
+          (item) => !idsLocales.has(String(item.id)),
+        ).length;
+        return { filas, resumen };
+      },
       construirEnvio() {
         const envio = { source: "bruma-cafe" };
         const contactos = leerPedidos().map(

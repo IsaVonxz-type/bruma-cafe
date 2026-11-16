@@ -111,6 +111,16 @@ const Controlador = (() => {
     });
   }
 
+  function traerStockQuanty() {
+    return ejecutarQuanty(async (clave) => {
+      const remotos = await ApiQuanty.consultarStock(clave);
+      Vista.pintarStockQuanty(Modelo.quanty.compararStock(remotos));
+      Vista.mostrarEstadoQuanty(
+        `Stock recibido de Quanty: ${remotos.length} ${remotos.length === 1 ? "producto" : "productos"}.`,
+      );
+    });
+  }
+
   function enviarAQuanty(evento) {
     evento.preventDefault();
     return ejecutarQuanty(async (clave) => {
@@ -138,6 +148,9 @@ const Controlador = (() => {
     document
       .querySelector("#quanty-test")
       .addEventListener("click", probarClaveQuanty);
+    document
+      .querySelector("#quanty-stock-load")
+      .addEventListener("click", traerStockQuanty);
     document
       .querySelector("#quanty-forget")
       .addEventListener("click", () => {

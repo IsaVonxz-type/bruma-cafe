@@ -383,8 +383,82 @@ const Vista = (() => {
         contenedor.append(articulo);
       });
     },
+    pintarStockQuanty({ filas, resumen }) {
+      const contenedor = document.querySelector("#quanty-stock");
+      contenedor.replaceChildren();
+      const partes = [
+        `${resumen.igual} coinciden`,
+        `${resumen.distinto} con diferencia`,
+        `${resumen.ausente} sin enviar`,
+      ];
+      if (resumen.soloEnQuanty) partes.push(`${resumen.soloEnQuanty} solo en Quanty`);
+      const tabla = crearElemento("table", "quanty__table");
+      tabla.append(
+        crearElemento(
+          "caption",
+          "visually-hidden",
+          "Comparación del stock de Bruma Café con el de Quanty",
+        ),
+      );
+      const encabezados = crearElemento("tr");
+      [
+        ["Producto", ""],
+        ["En Bruma", "data-table__num"],
+        ["En Quanty", "data-table__num"],
+        ["Diferencia", "data-table__num"],
+        ["Estado", ""],
+        ["Actualizado", ""],
+      ].forEach(([texto, clase]) => {
+        const celda = crearElemento("th", clase, texto);
+        celda.scope = "col";
+        encabezados.append(celda);
+      });
+      const cuerpo = crearElemento("tbody");
+      const estados = {
+        igual: ["Coincide", "disponible"],
+        distinto: ["Diferente", "bajo"],
+        ausente: ["Sin enviar", "agotado"],
+      };
+      filas.forEach((fila) => {
+        const [etiqueta, variante] = estados[fila.estado];
+        const estado = crearElemento("td");
+        estado.append(crearElemento("span", `pill pill--${variante}`, etiqueta));
+        const diferencia =
+          fila.diferencia === undefined
+            ? "-"
+            : `${fila.diferencia > 0 ? "+" : ""}${fila.diferencia}`;
+        const registro = crearElemento("tr");
+        registro.append(
+          crearElemento("td", "", fila.nombre),
+          crearElemento("td", "data-table__num", String(fila.cantidadLocal)),
+          crearElemento(
+            "td",
+            "data-table__num",
+            fila.cantidadQuanty === undefined ? "-" : String(fila.cantidadQuanty),
+          ),
+          crearElemento("td", "data-table__num", diferencia),
+          estado,
+          crearElemento(
+            "td",
+            "",
+            fila.actualizado ? formatoFecha.format(new Date(fila.actualizado)) : "-",
+          ),
+        );
+        cuerpo.append(registro);
+      });
+      tabla.append(crearElemento("thead"), cuerpo);
+      tabla.querySelector("thead").append(encabezados);
+      const envoltorio = crearElemento("div", "data-table__wrap");
+      envoltorio.append(tabla);
+      contenedor.append(
+        crearElemento("h3", "", "Stock en Quanty"),
+        crearElemento("p", "quanty__summary", partes.join(" · ")),
+        envoltorio,
+      );
+    },
     limpiarResultadoQuanty() {
       document.querySelector("#quanty-result").replaceChildren();
+      document.querySelector("#quanty-stock").replaceChildren();
     },
     darFormatoPrecio(valor) {
       return formatoPrecio.format(valor);

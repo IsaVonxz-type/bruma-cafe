@@ -1126,6 +1126,21 @@ tbody tr:hover {
   font-size: 0.9rem;
 }
 
+.quanty__stock {
+  margin-top: 40px;
+}
+
+.quanty__stock h3 {
+  margin-bottom: 8px;
+  font-size: 1.8rem;
+}
+
+.quanty__summary {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .quanty__actions {
   display: flex;
   flex-wrap: wrap;

@@ -14,10 +14,10 @@ const ApiQuanty = (() => {
     return "Quanty no pudo procesar la solicitud. Inténtalo de nuevo en unos minutos.";
   }
 
-  async function solicitar(clave, opciones = {}) {
+  async function solicitar(clave, opciones = {}, consulta = "") {
     let respuesta;
     try {
-      respuesta = await fetch(endpoint, {
+      respuesta = await fetch(`${endpoint}${consulta}`, {
         ...opciones,
         headers: { "x-api-key": clave, ...opciones.headers },
         signal: AbortSignal.timeout(tiempoMaximo),
@@ -37,6 +37,18 @@ const ApiQuanty = (() => {
     async probarClave(clave) {
       const datos = await solicitar(clave);
       return datos.ok === true;
+    },
+    async consultarStock(clave, origen = "bruma-cafe") {
+      const datos = await solicitar(
+        clave,
+        {},
+        `?source=${encodeURIComponent(origen)}`,
+      );
+      if (!Array.isArray(datos.productos))
+        throw new Error(
+          "Quanty no devolvió la lista de productos. Puede que la API aún no esté actualizada.",
+        );
+      return datos.productos;
     },
     importar(clave, envio) {
       return solicitar(clave, {
