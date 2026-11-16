@@ -54,7 +54,7 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 
 - `index.html`: estructura semántica con las tres vistas (tienda, contacto y panel), formularios, tabla de datos y cuadros de diálogo.
 - `css/styles.css`: estilos, distribución con Grid y Flexbox, tema claro y oscuro, estados de foco y adaptación responsive.
-- `js/modelo/modelo.js`: productos, reglas de negocio, operaciones CRUD, persistencia (`localStorage`), preferencia de tema y armado del envío a Quanty. No toca el DOM.
+- `js/modelo/modelo.js`: productos, reglas de negocio, operaciones CRUD, persistencia (`localStorage`), preferencia de tema, armado del envío a Quanty y comparación del stock recibido. No toca el DOM.
 - `js/modelo/reglasTabla.js`: reglas de la tabla: filtros combinados, ordenamiento, paginación y generación del CSV. No toca el DOM.
 - `js/vista/vista.js`: cambio de vista por ruta, lectura de formularios, tarjetas, filtros, indicadores, vista previa del producto, destacados y mensajes mediante APIs seguras del DOM. No guarda datos.
 - `js/vista/pintarTabla.js`: pintado de la tabla, indicadores de orden y paginación, y descarga del CSV.
@@ -80,6 +80,7 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 - Tabla de inventario con búsqueda, filtros combinados (categoría y disponibilidad: disponibles, stock bajo y agotados), ordenamiento por columna, paginación de 5 filas y exportación a CSV de los registros filtrados.
 - Formulario de contacto con validación del navegador; al enviar muestra un mensaje con el nombre, limpia el formulario y guarda el pedido en `localStorage`, desde donde puede eliminarse.
 - Sincronización con Quanty: envío de productos y contactos a la API REST de Quanty, con indicador de carga, resultado en pantalla y mensajes de error claros.
+- Consulta del stock de Quanty: el botón "Traer stock de Quanty" recibe las cantidades actuales y las compara con el inventario local en una tabla, con la diferencia y el estado de cada producto.
 - Tema claro y oscuro con preferencia guardada, y diseño responsive probado en pantalla de móvil y de escritorio.
 
 ## API consumida: Quanty
@@ -90,11 +91,43 @@ Quanty es la aplicación de administración de almacenamiento y presupuestos del
 | --- | --- |
 | URL base | `https://dnhpjwyaotdyhpialqlk.supabase.co/functions/v1` |
 | Endpoint | `/catalog-import` |
-| Métodos | `GET` (probar la clave) y `POST` (importar) |
+| Métodos | `GET` (probar la clave y consultar el stock actual) y `POST` (importar) |
 | Encabezados | `x-api-key: qk_...` y `Content-Type: application/json` |
 | Límites | Cuerpo de máximo 1 MB y 500 elementos por lista |
 
 La clave la genera el usuario en Quanty (Configuración, Integraciones) y se pega en el bloque "Integración con Quanty" del panel de inventario (`#panel`). Se guarda solo en el `localStorage` del navegador y nunca se sube al repositorio.
+
+### Consultar el stock (`GET`)
+
+Quanty devuelve el stock actual de los productos que Bruma Café le envió. Si en Quanty se aprueba una cotización o se ajusta el inventario, la siguiente consulta trae la cantidad nueva. Parámetro opcional: `source` (por defecto `bruma-cafe`).
+
+```http
+GET /functions/v1/catalog-import?source=bruma-cafe
+x-api-key: qk_...
+```
+
+Ejemplo de respuesta `200`:
+
+```json
+{
+  "ok": true,
+  "source": "bruma-cafe",
+  "productos": [
+    {
+      "id": "1",
+      "nombre": "Sierra Dulce",
+      "cantidad": 9,
+      "umbral": 5,
+      "precio": 42000,
+      "actualizado": "2026-11-16T15:00:00Z"
+    }
+  ]
+}
+```
+
+La aplicación usa este endpoint con el botón "Traer stock de Quanty" del panel. El modelo cruza cada producto local con el de Quanty por `id` (`map` y `find`), calcula la diferencia de cantidad y el resumen (`reduce`), y ordena las filas por mayor diferencia (`sort`). La vista muestra el resultado en una tabla con el estado de cada producto: coincide, diferente o sin enviar.
+
+### Importar (`POST`)
 
 Parámetros del cuerpo del `POST`:
 
