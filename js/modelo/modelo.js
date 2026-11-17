@@ -62,6 +62,7 @@ const Modelo = (() => {
   let productos = [];
   let siguienteId = 1;
 
+  // Guarda el inventario como JSON; devuelve false si el navegador no tiene espacio o bloquea el almacenamiento.
   function persistir() {
     try {
       localStorage.setItem(productosKey, JSON.stringify(productos));
@@ -94,6 +95,7 @@ const Modelo = (() => {
     return Math.max(leerSiguienteIdGuardado(), mayor + 1);
   }
 
+  // Si no hay pedidos guardados o el JSON está dañado, se parte de una lista vacía.
   function leerPedidos() {
     try {
       return JSON.parse(localStorage.getItem(pedidosKey) || "[]");
@@ -110,6 +112,7 @@ const Modelo = (() => {
     get productos() {
       return productos;
     },
+    // Lee el inventario guardado; si no existe o está dañado, carga los productos de ejemplo.
     cargar() {
       try {
         const guardados = JSON.parse(localStorage.getItem(productosKey));
@@ -123,6 +126,7 @@ const Modelo = (() => {
       siguienteId = calcularSiguienteId();
       guardarSiguienteId();
     },
+    // Devuelve la lista de errores de negocio un arreglo vacío significa que los datos son válidos.
     validar(datos, idEditando = null) {
       const errores = [];
       const nombre = datos.nombre.trim();
@@ -136,6 +140,7 @@ const Modelo = (() => {
         errores.push("La cantidad debe ser un entero mayor o igual a cero.");
       if (!new Set(["Grano", "Molido", "Accesorios"]).has(datos.categoria))
         errores.push("Selecciona una categoría válida.");
+      // El nombre debe ser único sin distinguir mayúsculas al editar se ignora el propio producto.
       if (
         productos.some(
           (producto) =>
@@ -149,6 +154,7 @@ const Modelo = (() => {
           "No se pueden registrar más de 50 bolsas de café en grano.",
         );
       if (!datos.imagen) errores.push("La URL de imagen es obligatoria.");
+      // new URL lanza un error si el texto no es una dirección válida; se acepta solo http o https.
       try {
         const url = new URL(datos.imagen, location.href);
         if (!["http:", "https:"].includes(url.protocol))
@@ -158,6 +164,7 @@ const Modelo = (() => {
       }
       return errores;
     },
+    // Inserta al inicio con el siguiente id; si no se puede guardar, deshace el cambio en memoria.
     agregar(datos) {
       const id = siguienteId;
       productos.unshift({ ...datos, id, nombre: datos.nombre.trim() });
@@ -170,6 +177,7 @@ const Modelo = (() => {
     buscarPorId(id) {
       return productos.find((producto) => producto.id === id);
     },
+    // Reemplaza el producto por su id con map y guarda la lista anterior para poder revertir.
     actualizar(id, datos) {
       if (!this.buscarPorId(id)) return false;
       const anterior = productos;
@@ -182,6 +190,7 @@ const Modelo = (() => {
       productos = anterior;
       return false;
     },
+    // Quita el producto con filter; si falla el guardado se restaura la lista anterior.
     eliminar(id) {
       const encontrados = productos.some((producto) => producto.id === id);
       const anteriores = productos;
@@ -191,6 +200,7 @@ const Modelo = (() => {
       productos = anteriores;
       return false;
     },
+    // Vuelve a los ejemplos; structuredClone copia los datos para no modificar el original.
     restaurar() {
       const anteriores = productos;
       productos = structuredClone(ejemplos);
@@ -198,16 +208,19 @@ const Modelo = (() => {
       productos = anteriores;
       return false;
     },
+    // Clasifica el stock: agotado (cero), bajo (hasta el umbral) o disponible.
     estadoStock(producto) {
       if (producto.cantidad === 0) return "agotado";
       return producto.cantidad <= umbralStockBajo ? "bajo" : "disponible";
     },
+    // reduce recorre los productos y los resume en un solo número: el total de unidades.
     totalUnidades() {
       return productos.reduce(
         (total, producto) => total + producto.cantidad,
         0,
       );
     },
+    // Valor del inventario: suma precio por cantidad de cada producto.
     valorInventario() {
       return productos.reduce(
         (total, producto) => total + producto.precio * producto.cantidad,
@@ -238,6 +251,7 @@ const Modelo = (() => {
           return "";
         }
       },
+      // La clave de Quanty solo se guarda en este navegador; nunca se sube al repositorio.
       guardarClave(clave) {
         try {
           localStorage.setItem(claveQuantyKey, clave);
@@ -253,6 +267,7 @@ const Modelo = (() => {
           return;
         }
       },
+      // Empareja cada producto local con el de Quanty por id (find) y calcula la diferencia de cantidad.
       compararStock(productosQuanty) {
         const filas = productos
           .map((producto) => {
@@ -277,11 +292,13 @@ const Modelo = (() => {
               estado: remoto.cantidad === producto.cantidad ? "igual" : "distinto",
             };
           })
+          // Primero las filas con mayor diferencia absoluta; si empatan, por nombre.
           .sort(
             (a, b) =>
               Math.abs(b.diferencia ?? 0) - Math.abs(a.diferencia ?? 0) ||
               a.nombre.localeCompare(b.nombre, "es"),
           );
+        // reduce cuenta cuántas filas hay en cada estado: igual, distinto y ausente.
         const resumen = filas.reduce(
           (total, fila) => ({ ...total, [fila.estado]: total[fila.estado] + 1 }),
           { igual: 0, distinto: 0, ausente: 0 },
@@ -292,6 +309,7 @@ const Modelo = (() => {
         ).length;
         return { filas, resumen };
       },
+      // Copia al inventario local las cantidades de Quanty; ignora valores que no sean enteros desde cero.
       sincronizarStock(productosQuanty) {
         // Solo actualiza IDs locales; los productos remotos nuevos requieren importación explícita.
         const remotosPorId = new Map(
@@ -319,6 +337,7 @@ const Modelo = (() => {
         productos = anteriores;
         return { ok: false, actualizados: 0 };
       },
+      // Arma el cuerpo del POST: solo incluye las listas que tienen datos.
       construirEnvio() {
         const envio = { source: "bruma-cafe" };
         const contactos = leerPedidos().map(
@@ -336,6 +355,7 @@ const Modelo = (() => {
             precio: producto.precio,
             cantidad: producto.cantidad,
             categoria: producto.categoria,
+            // Quanty necesita una URL absoluta para mostrar la imagen, no una ruta relativa.
             imagen: new URL(producto.imagen, location.href).href,
           }));
         if (contactos.length) envio.contactos = contactos;

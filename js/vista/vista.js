@@ -25,6 +25,7 @@ const Vista = (() => {
   let temporizadorContacto;
   let temporizadorAviso;
 
+  // Crea un elemento y le pone el texto con textContent, así lo escrito por el usuario nunca se interpreta como HTML.
   function crearElemento(etiqueta, clase, texto) {
     const elemento = document.createElement(etiqueta);
     if (clase) elemento.className = clase;
@@ -32,6 +33,7 @@ const Vista = (() => {
     return elemento;
   }
 
+  // Muestra un aviso breve que se oculta solo; clearTimeout evita que uno anterior lo cierre antes de tiempo.
   function mostrarAviso(mensaje) {
     clearTimeout(temporizadorAviso);
     aviso.textContent = mensaje;
@@ -43,6 +45,7 @@ const Vista = (() => {
   }
 
   return {
+    // Cambia de vista según el hash de la dirección (#tienda, #contacto o #panel) sin recargar la página.
     mostrarRuta(hash) {
       const ruta = hash.replace("#", "");
       if (ruta === "catalogo") {
@@ -136,6 +139,7 @@ const Vista = (() => {
       status.classList.toggle("form-status--error", tipo === "error");
       status.dataset.type = tipo;
     },
+    // Filtra por búsqueda y categoría con filter y dibuja una tarjeta por producto.
     pintarProductos(productos, busqueda, categoria) {
       const query = busqueda.toLocaleLowerCase();
       const filtrados = productos.filter((producto) => {
@@ -213,6 +217,7 @@ const Vista = (() => {
         categoryFilters.append(boton);
       });
     },
+    // Los destacados son los cinco productos con más stock; se obtienen con filter, sort y slice.
     pintarDestacados(productos) {
       const lista = document.querySelector("#ranking");
       lista.replaceChildren();
@@ -236,6 +241,7 @@ const Vista = (() => {
       document.querySelector("#trust-available").textContent =
         `${productos.filter((producto) => producto.cantidad > 0).length} de ${productos.length}`;
     },
+    // Muestra los indicadores del panel: cuenta agotados y stock bajo con filter y pide el resto al modelo.
     pintarResumen(productos, modelo) {
       const agotados = productos.filter(
         (producto) => producto.cantidad === 0,
@@ -291,6 +297,7 @@ const Vista = (() => {
     temaEsOscuro() {
       return document.documentElement.dataset.theme === "dark";
     },
+    // Abre el diálogo de confirmación y devuelve una promesa: true si se acepta y false si se cancela.
     confirmar(titulo, mensaje, accion, peligro = false) {
       const dialogo = document.querySelector("#confirm-dialog");
       dialogo.querySelector("#confirm-title").textContent = titulo;
@@ -351,6 +358,7 @@ const Vista = (() => {
       estado.classList.toggle("form-status--error", tipo === "error");
       estado.classList.toggle("form-status--loading", tipo === "loading");
     },
+    // Bloquea los botones mientras Quanty responde y lo indica con aria-busy para los lectores de pantalla.
     cargandoQuanty(cargando) {
       const formulario = document.querySelector("#quanty-form");
       formulario.setAttribute("aria-busy", String(cargando));

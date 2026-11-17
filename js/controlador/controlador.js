@@ -6,6 +6,7 @@ const Controlador = (() => {
   let categoriaActiva = "Todas";
   let busqueda = "";
 
+  // Repinta todo lo que depende del inventario: tarjetas, indicadores, destacados y tabla.
   function actualizarVista() {
     if (
       categoriaActiva !== "Todas" &&
@@ -26,6 +27,7 @@ const Controlador = (() => {
     Vista.mostrarMensaje("");
   }
 
+  // Flujo de guardar: leer el formulario, validar en el modelo, pedir confirmación y guardar solo si se acepta.
   async function guardarProducto(evento) {
     evento.preventDefault();
     const datos = Vista.leerFormulario();
@@ -82,6 +84,7 @@ const Controlador = (() => {
     actualizarVista();
   }
 
+  // Envoltorio común de los botones de Quanty: revisa la clave, muestra la carga y atrapa los errores en un solo lugar.
   async function ejecutarQuanty(tarea) {
     const clave = Vista.leerClaveQuanty();
     if (!clave) {
@@ -96,6 +99,7 @@ const Controlador = (() => {
     } catch (error) {
       Vista.mostrarEstadoQuanty(error.message, "error");
     } finally {
+      // finally se ejecuta siempre, así los botones se habilitan de nuevo aunque la petición haya fallado.
       Vista.cargandoQuanty(false);
     }
   }
@@ -112,6 +116,7 @@ const Controlador = (() => {
     });
   }
 
+  // Trae el stock, lo compara y actualiza el inventario local; conviene hacerlo antes de enviar para no pisar cantidades más nuevas.
   function traerStockQuanty() {
     return ejecutarQuanty(async (clave) => {
       const remotos = await ApiQuanty.consultarStock(clave);
@@ -130,6 +135,7 @@ const Controlador = (() => {
     });
   }
 
+  // Envía el catálogo completo: en Quanty las cantidades de Bruma reemplazan a las que ya tenía.
   function enviarAQuanty(evento) {
     evento.preventDefault();
     return ejecutarQuanty(async (clave) => {
@@ -201,10 +207,12 @@ const Controlador = (() => {
     document
       .querySelector("#record-form")
       .addEventListener("input", () => Vista.pintarVistaPrevia());
+    // Cada cambio del hash (clic en el menú) muestra la vista que le corresponde.
     window.addEventListener("hashchange", () =>
       Vista.mostrarRuta(location.hash),
     );
     Vista.mostrarRuta(location.hash);
+    // Delegación de eventos: un solo listener en el cuerpo de la tabla atiende Editar y Eliminar de todas las filas, incluso las creadas después.
     document
       .querySelector("#table-body")
       .addEventListener("click", (evento) => {
@@ -250,6 +258,7 @@ const Controlador = (() => {
       .addEventListener("submit", (evento) => {
         evento.preventDefault();
         const formulario = evento.currentTarget;
+        // reportValidity muestra los mensajes de validación del navegador y devuelve false si hay campos inválidos.
         if (!formulario.reportValidity()) return;
         const datos = Vista.leerContacto(formulario);
         try {

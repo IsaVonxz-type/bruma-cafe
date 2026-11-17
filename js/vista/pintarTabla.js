@@ -28,6 +28,7 @@ const VistaTabla = (() => {
         selectorCategoria.append(opcion);
       });
     },
+    // Crea las filas con nodos DOM y textContent
     pintar(resultado, columna, direccion) {
       cuerpo.replaceChildren();
       resultado.items.forEach((producto) => {
@@ -79,6 +80,7 @@ const VistaTabla = (() => {
         cuerpo.append(fila);
       });
       document.querySelector("#table-empty").hidden = resultado.total > 0;
+      // aria-sort le indica a los lectores de pantalla qué columna está ordenada y en qué sentido.
       document.querySelectorAll("th[data-column]").forEach((encabezado) => {
         const activo = encabezado.dataset.column === columna;
         encabezado.setAttribute(
@@ -98,6 +100,7 @@ const VistaTabla = (() => {
     mostrarMensaje(mensaje) {
       document.querySelector("#table-status").textContent = mensaje;
     },
+    // Descarga el CSV sin servidor: crea un Blob, una URL temporal y un enlace con download, y luego libera la URL.
     descargarCsv(contenido, nombreArchivo) {
       const url = URL.createObjectURL(
         new Blob([contenido], { type: "text/csv;charset=utf-8" }),
