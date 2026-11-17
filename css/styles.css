@@ -471,7 +471,7 @@ h3 {
   padding: 6px 16px;
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 0;
   background: transparent;
   font: inherit;
   font-size: 0.86rem;
@@ -1106,13 +1106,18 @@ tbody tr:hover {
 }
 
 .quanty {
-  max-width: 720px;
+  width: 100%;
 }
 
 .quanty__box {
+  width: 100%;
   padding: 24px;
   border: 1px solid var(--line);
   background: var(--surface);
+}
+
+.panel-block #quanty-result {
+  max-width: none;
 }
 
 .quanty__box h3 {
