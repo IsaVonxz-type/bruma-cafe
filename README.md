@@ -80,7 +80,7 @@ Las tipografías DM Sans y Fraunces se cargan desde Google Fonts y requieren con
 - Tabla de inventario con búsqueda, filtros combinados (categoría y disponibilidad: disponibles, stock bajo y agotados), ordenamiento por columna, paginación de 5 filas y exportación a CSV de los registros filtrados.
 - Formulario de contacto con validación del navegador; al enviar muestra un mensaje con el nombre, limpia el formulario y guarda el pedido en `localStorage`, desde donde puede eliminarse.
 - Sincronización con Quanty: envío de productos y contactos a la API REST de Quanty, con indicador de carga, resultado en pantalla y mensajes de error claros.
-- Consulta del stock de Quanty: el botón "Traer stock de Quanty" recibe las cantidades actuales y las compara con el inventario local en una tabla, con la diferencia y el estado de cada producto.
+- Consulta del stock de Quanty: el botón "Traer stock de Quanty" compara las cantidades recibidas con el inventario local, muestra la diferencia previa y actualiza en Bruma las cantidades de los productos coincidentes por ID. Los productos que no aparecen en Quanty no cambian.
 - Tema claro y oscuro con preferencia guardada, y diseño responsive probado en pantalla de móvil y de escritorio.
 
 ## API consumida: Quanty
@@ -125,7 +125,7 @@ Ejemplo de respuesta `200`:
 }
 ```
 
-La aplicación usa este endpoint con el botón "Traer stock de Quanty" del panel. El modelo cruza cada producto local con el de Quanty por `id` (`map` y `find`), calcula la diferencia de cantidad y el resumen (`reduce`), y ordena las filas por mayor diferencia (`sort`). La vista muestra el resultado en una tabla con el estado de cada producto: coincide, diferente o sin enviar.
+La aplicación usa este endpoint con el botón "Traer stock de Quanty" del panel. El modelo cruza cada producto local con el de Quanty por `id`, conserva y muestra la diferencia entre el stock previo de Bruma y el remoto, y actualiza en `localStorage` las cantidades de los productos coincidentes. Los productos ausentes de Quanty permanecen sin cambios. La vista muestra el resultado y el estado de cada producto: coincide, diferente o sin enviar.
 
 ### Importar (`POST`)
 
@@ -209,5 +209,7 @@ La aplicación está publicada en Vercel: <https://bruma-cafe-eight.vercel.app>
   - `sierra-dulce.jpg`: `photo-1495474472287-4d71bcdd2085`.
   - `niebla-rosa.jpg`: `photo-1447933601403-0c6688de566e`.
   - `monte-negro.jpg`: `photo-1514432324607-a09d9b4aefdd`.
-- `caturra-honey.jpg`, `prensa-bruma.jpg` y `huila-de-altura.jpg`: imágenes generadas por el equipo con ChatGPT (OpenAI).
+- `caturra-honey.jpg`: foto de un tarro gris de café, [Unsplash](https://unsplash.com/es/fotos/tarro-de-cafe-gris-0EWWLx_etkw) (ID `0EWWLx_etkw`), bajo la [Unsplash License](https://unsplash.com/license).
+- `huila-de-altura.jpg`: foto de una cafetería con letreros LED, [Unsplash](https://unsplash.com/es/fotos/fotografia-de-cafeteria-con-senalizacion-led-y-lamparas-colgantes-y-tableros-de-menu-ItaV89TNkks) (ID `ItaV89TNkks`), bajo la [Unsplash License](https://unsplash.com/license).
+- `prensa-bruma.jpg`: “Coffee in a Percolator”, foto de Vinícius Vieira, [Pexels](https://www.pexels.com/photo/coffee-in-a-percolator-22608921/) (ID `22608921`), bajo la [Pexels License](https://www.pexels.com/license/).
 - `assets/logo.svg` y `assets/banner.svg`: diseño propio del equipo.
