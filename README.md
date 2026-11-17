@@ -2,8 +2,14 @@
 
 # Participantes
 
+Equipo 1
+
 - Isaac Manuel Madera Jimenez
 - Brayan Stid Jimenez Arredondo
+- Isabella Aristizábal Díaz
+- Daniela Montoya Quintero
+
+Isaac y Brayan desarrollaron Bruma Café. Isabella y Daniela desarrollaron Quanty, la aplicación de inventario y cotizaciones con la que Bruma Café se integra mediante la API REST descrita más abajo.
 
 # Bruma Café
 
