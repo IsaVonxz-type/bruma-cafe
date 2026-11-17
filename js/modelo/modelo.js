@@ -290,6 +290,31 @@ const Modelo = (() => {
         ).length;
         return { filas, resumen };
       },
+      sincronizarStock(productosQuanty) {
+        const remotosPorId = new Map(
+          productosQuanty
+            .filter(
+              (item) =>
+                item.id !== undefined &&
+                Number.isInteger(item.cantidad) &&
+                item.cantidad >= 0,
+            )
+            .map((item) => [String(item.id), item.cantidad]),
+        );
+        const anteriores = productos;
+        let actualizados = 0;
+        productos = productos.map((producto) => {
+          const cantidad = remotosPorId.get(String(producto.id));
+          if (cantidad === undefined || cantidad === producto.cantidad)
+            return producto;
+          actualizados += 1;
+          return { ...producto, cantidad };
+        });
+        if (!actualizados) return { ok: true, actualizados };
+        if (persistir()) return { ok: true, actualizados };
+        productos = anteriores;
+        return { ok: false, actualizados: 0 };
+      },
       construirEnvio() {
         const envio = { source: "bruma-cafe" };
         const contactos = leerPedidos().map(

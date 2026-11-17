@@ -114,9 +114,16 @@ const Controlador = (() => {
   function traerStockQuanty() {
     return ejecutarQuanty(async (clave) => {
       const remotos = await ApiQuanty.consultarStock(clave);
-      Vista.pintarStockQuanty(Modelo.quanty.compararStock(remotos));
+      const comparacion = Modelo.quanty.compararStock(remotos);
+      const sincronizacion = Modelo.quanty.sincronizarStock(remotos);
+      if (!sincronizacion.ok)
+        throw new Error(
+          "Quanty devolvió el stock, pero no se pudo guardar en este navegador.",
+        );
+      actualizarVista();
+      Vista.pintarStockQuanty(comparacion, sincronizacion.actualizados);
       Vista.mostrarEstadoQuanty(
-        `Stock recibido de Quanty: ${remotos.length} ${remotos.length === 1 ? "producto" : "productos"}.`,
+        `Stock recibido de Quanty: ${remotos.length} ${remotos.length === 1 ? "producto" : "productos"}. ${sincronizacion.actualizados} ${sincronizacion.actualizados === 1 ? "cantidad actualizada" : "cantidades actualizadas"} en Bruma.`,
       );
     });
   }

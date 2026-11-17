@@ -383,7 +383,7 @@ const Vista = (() => {
         contenedor.append(articulo);
       });
     },
-    pintarStockQuanty({ filas, resumen }) {
+    pintarStockQuanty({ filas, resumen }, actualizados) {
       const contenedor = document.querySelector("#quanty-stock");
       contenedor.replaceChildren();
       const partes = [
@@ -403,7 +403,7 @@ const Vista = (() => {
       const encabezados = crearElemento("tr");
       [
         ["Producto", ""],
-        ["En Bruma", "data-table__num"],
+        ["Antes en Bruma", "data-table__num"],
         ["En Quanty", "data-table__num"],
         ["Diferencia", "data-table__num"],
         ["Estado", ""],
@@ -453,6 +453,11 @@ const Vista = (() => {
       contenedor.append(
         crearElemento("h3", "", "Stock en Quanty"),
         crearElemento("p", "quanty__summary", partes.join(" · ")),
+        crearElemento(
+          "p",
+          "quanty__summary",
+          `${actualizados} ${actualizados === 1 ? "cantidad actualizada" : "cantidades actualizadas"} en el inventario local. La diferencia muestra el cambio desde el stock anterior de Bruma.`,
+        ),
         envoltorio,
       );
     },
