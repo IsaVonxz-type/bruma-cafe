@@ -30,6 +30,7 @@
   color-scheme: light;
 }
 
+/* Los componentes reutilizan sus reglas; el tema solo cambia estos tokens. */
 :root[data-theme="dark"] {
   --cream: #232925;
   --paper: #171c19;
@@ -197,6 +198,7 @@ h3 {
   cursor: not-allowed;
 }
 
+/* Mantiene la navegación visible al recorrer vistas largas sin fijar el contenido. */
 .topbar {
   position: sticky;
   z-index: 20;
@@ -332,6 +334,7 @@ h3 {
   color: var(--muted);
 }
 
+/* La portada usa dos columnas en escritorio y se reorganiza en el punto de quiebre responsive. */
 .hero {
   display: grid;
   min-height: calc(100vh - 72px);
@@ -720,6 +723,7 @@ select:user-invalid {
   font-size: 1.4rem;
 }
 
+/* La banda de destacados invierte el contraste sin cambiar las reglas de sus componentes. */
 .wrap--dark {
   color: #f4efe7;
   background: var(--forest-deep);
@@ -988,6 +992,7 @@ details p {
   gap: 16px;
 }
 
+/* La tabla conserva un ancho legible y se desplaza horizontalmente en pantallas estrechas. */
 .data-table__wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -1153,6 +1158,7 @@ tbody tr:hover {
   margin-top: 16px;
 }
 
+/* Ambos diálogos nativos comparten el mismo marco visual; su contenido sigue siendo independiente. */
 dialog {
   width: min(560px, calc(100vw - 28px));
   padding: 0;
@@ -1364,6 +1370,7 @@ footer small {
   }
 }
 
+/* Desactiva el movimiento no esencial cuando el sistema lo solicita. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

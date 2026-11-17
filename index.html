@@ -63,7 +63,9 @@
     </header>
 
     <main id="contenido">
+      <!-- Vista pública: reúne la portada editorial, el catálogo y contenido de marca. -->
       <div id="view-tienda">
+        <!-- La portada presenta el origen del café y enlaza las rutas principales de compra. -->
         <section class="wrap hero" id="home" aria-labelledby="hero-title">
           <div>
             <p class="eyebrow">Cosecha 2026 · Huila, Colombia</p>
@@ -129,6 +131,7 @@
           </figure>
         </section>
 
+        <!-- Los resultados y filtros se generan desde el inventario disponible en el navegador. -->
         <section class="wrap" id="catalogo" aria-labelledby="catalogo-title">
           <div class="sec-head">
             <p class="eyebrow">Selección del tostador</p>
@@ -197,6 +200,7 @@
         </section>
       </div>
 
+      <!-- Vista de contacto: el formulario guarda pedidos localmente y el FAQ usa controles nativos. -->
       <div id="view-contacto" hidden>
         <section class="wrap contact" aria-labelledby="contacto-title">
           <div class="contact__grid">
@@ -286,6 +290,7 @@
         </section>
       </div>
 
+      <!-- Vista administrativa: concentra inventario, métricas y operaciones explícitas con Quanty. -->
       <div id="view-panel" hidden>
         <section class="wrap" aria-labelledby="panel-title">
           <div class="panel-head">
@@ -309,6 +314,7 @@
             </div>
           </div>
 
+          <!-- Estos valores iniciales se sustituyen con métricas calculadas desde el modelo. -->
           <div class="kpis">
             <div class="kpis__item">
               <span>Productos</span>
@@ -454,6 +460,7 @@
             ></p>
           </div>
 
+          <!-- La clave se conserva en este navegador; cada botón ejecuta un flujo independiente. -->
           <div class="panel-block" id="quanty">
             <h2>Integración con Quanty</h2>
             <div class="quanty">
@@ -542,6 +549,7 @@
       <small>&copy; 2026 Bruma Café. Todos los derechos reservados.</small>
     </footer>
 
+    <!-- Formulario modal reutilizado para crear y editar productos. -->
     <dialog
       id="product-dialog"
       
@@ -624,6 +632,7 @@
       </form>
     </dialog>
 
+    <!-- Confirmaciones nativas comparten este diálogo y resuelven la acción del controlador. -->
     <dialog
       id="confirm-dialog"
       class="confirm-dialog"
@@ -653,6 +662,7 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+    <!-- Mantén este orden: los módulos globales dependen de los anteriores y app.js inicia al final. -->
     <script src="js/modelo/modelo.js"></script>
     <script src="js/modelo/reglasTabla.js"></script>
     <script src="js/servicios/api.js"></script>
