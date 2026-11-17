@@ -1,5 +1,6 @@
 "use strict";
 
+// Coordina eventos y operaciones entre modelo, vistas y servicio remoto.
 const Controlador = (() => {
   let idEditando = null;
   let categoriaActiva = "Todas";
@@ -114,6 +115,7 @@ const Controlador = (() => {
   function traerStockQuanty() {
     return ejecutarQuanty(async (clave) => {
       const remotos = await ApiQuanty.consultarStock(clave);
+      // Se captura antes de sincronizar para conservar visible la diferencia aplicada.
       const comparacion = Modelo.quanty.compararStock(remotos);
       const sincronizacion = Modelo.quanty.sincronizarStock(remotos);
       if (!sincronizacion.ok)

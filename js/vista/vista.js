@@ -1,5 +1,6 @@
 "use strict";
 
+// Convierte el estado del modelo en interfaz y lee formularios sin persistir datos.
 const Vista = (() => {
   const formatoPrecio = new Intl.NumberFormat("es-CO", {
     style: "currency",
@@ -299,6 +300,7 @@ const Vista = (() => {
       aceptar.classList.toggle("confirm-dialog__accept--danger", peligro);
       dialogo.returnValue = "cancel";
       dialogo.showModal();
+      // El controlador espera esta promesa antes de ejecutar o cancelar la acción solicitada.
       return new Promise((resolve) => {
         const terminar = (aceptado) => {
           dialogo.removeEventListener("close", cerrar);

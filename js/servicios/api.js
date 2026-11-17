@@ -1,5 +1,6 @@
 "use strict";
 
+// Aísla el contrato HTTP de Quanty para que el controlador no gestione detalles de red.
 const ApiQuanty = (() => {
   const urlBase = "https://dnhpjwyaotdyhpialqlk.supabase.co/functions/v1";
   const endpoint = `${urlBase}/catalog-import`;

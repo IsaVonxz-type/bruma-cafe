@@ -1,5 +1,6 @@
 "use strict";
 
+// Fuente local del inventario: valida y persiste datos, y deja el DOM a cargo de la vista.
 const Modelo = (() => {
   const productosKey = "bruma-cafe-productos";
   const siguienteIdKey = "bruma-cafe-siguiente-id";
@@ -89,6 +90,7 @@ const Modelo = (() => {
       (maximo, producto) => Math.max(maximo, producto.id),
       0,
     );
+    // Quanty usa este ID como referencia externa, así que no debe reutilizarse tras eliminar un producto.
     return Math.max(leerSiguienteIdGuardado(), mayor + 1);
   }
 
@@ -291,6 +293,7 @@ const Modelo = (() => {
         return { filas, resumen };
       },
       sincronizarStock(productosQuanty) {
+        // Solo actualiza IDs locales; los productos remotos nuevos requieren importación explícita.
         const remotosPorId = new Map(
           productosQuanty
             .filter(
@@ -312,6 +315,7 @@ const Modelo = (() => {
         });
         if (!actualizados) return { ok: true, actualizados };
         if (persistir()) return { ok: true, actualizados };
+        // Revierte la memoria si falla localStorage para no mostrar un stock que no quedó guardado.
         productos = anteriores;
         return { ok: false, actualizados: 0 };
       },

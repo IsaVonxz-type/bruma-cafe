@@ -1,5 +1,6 @@
 "use strict";
 
+// Combina filtros leídos de la vista con orden y paginación para volver a pintar la tabla.
 const ControladorTabla = (() => {
   const estado = { columna: "nombre", direccion: "asc", pagina: 1 };
 

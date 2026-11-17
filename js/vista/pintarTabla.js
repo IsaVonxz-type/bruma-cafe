@@ -1,5 +1,6 @@
 "use strict";
 
+// Presenta la página de resultados que entrega el controlador de tabla y descarga el CSV.
 const VistaTabla = (() => {
   const formatoPrecio = new Intl.NumberFormat("es-CO", {
     style: "currency",

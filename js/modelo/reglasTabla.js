@@ -1,5 +1,6 @@
 "use strict";
 
+// Transforma datos del inventario en resultados filtrados, ordenados, paginados y exportables.
 const ModeloTabla = (() => {
   const tamanoPagina = 5;
   const columnas = {
@@ -18,6 +19,7 @@ const ModeloTabla = (() => {
 
   function celdaCsv(valor) {
     const texto = String(valor);
+    // Evita que valores que empiezan con operadores se ejecuten como fórmulas en hojas de cálculo.
     const seguro = /^[=+\-@\t\r]/.test(texto) ? `'${texto}` : texto;
     return `"${seguro.replaceAll('"', '""')}"`;
   }
